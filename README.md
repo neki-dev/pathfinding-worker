@@ -19,7 +19,7 @@ Documentation
 
 .
 
-## Install
+# Install
 
 ```sh
 npm i pathfinding-worker
@@ -27,8 +27,9 @@ npm i pathfinding-worker
 
 .
 
-## General
-### Create worker thread
+# General
+
+### ⚡️ Create worker thread
 ```ts
 const pathfinding = new Pathfinding(
   grid: Record<string, PathfindingGrid> | PathfindingGrid
@@ -36,15 +37,16 @@ const pathfinding = new Pathfinding(
 ```
 [`grid`] - _Grid (or layers of grids) with walkable tiles_
 
-### Terminate worker thread
+### ⚡️ Terminate worker thread
 ```ts
 pathfinding.destroy()
 ```
 
 .
 
-## Layers
-### Add new layer of grid
+# Layers
+
+### ⚡️ Add new layer of grid
 ```ts
 pathfinding.addLayer(
   name: string, 
@@ -55,7 +57,7 @@ pathfinding.addLayer(
 
 [`grid`] - _Grid with walkable tiles_
 
-### Get layer of grid
+### ⚡️ Get layer of grid
 ```ts
 const layer = pathfinding.getLayer(
   name: string, 
@@ -63,7 +65,7 @@ const layer = pathfinding.getLayer(
 ```
 [`name`] - _Layer name_
 
-### Remove exist layer of grid
+### ⚡️ Remove exist layer of grid
 ```ts
 pathfinding.removeLayer(
   name: string, 
@@ -73,8 +75,9 @@ pathfinding.removeLayer(
 
 .
 
-## Finding
-### Create pathfinder task
+# Finding
+
+### ⚡️ Create pathfinder task
 ```ts
 const idTask = pathfinder.createTask(
   config: PathfindingTaskConfig,
@@ -91,7 +94,7 @@ const idTask = pathfinder.createTask(
 
 [`callback`] - _Callback with result_
 
-### Cancel pathfinder task
+### ⚡️ Cancel pathfinder task
 ```ts
 pathfinder.cancelTask(id: number)
 ```
@@ -99,8 +102,9 @@ pathfinder.cancelTask(id: number)
 
 .
 
-## Tile walkable
-### Set walkable state
+# Tile walkable
+
+### ⚡️ Set walkable state
 ```ts
 pathfinder.setWalkable(
   position: PathfindingPosition,
@@ -114,9 +118,9 @@ pathfinder.setWalkable(
 
 [`layer`] - _Layer of grid if pathfinder has a few layers_
 
-### Get walkable state
+### ⚡️ Get walkable state
 ```ts
-const weight = pathfinder.isWalkable(
+const walkable = pathfinder.isWalkable(
   position: PathfindingPosition,
 )
 ```
@@ -124,8 +128,9 @@ const weight = pathfinder.isWalkable(
 
 .
 
-## Tile weight
-### Set weight
+# Tile weight
+
+### ⚡️ Set weight
 ```ts
 pathfinder.setWeight(
   position: PathfindingPosition,
@@ -136,7 +141,7 @@ pathfinder.setWeight(
 
 [`value`] - _New weight_
 
-### Reset weight
+### ⚡️ Reset weight
 ```ts
 pathfinder.resetWeight(
   position: PathfindingPosition,
@@ -144,7 +149,7 @@ pathfinder.resetWeight(
 ```
 [`position`] - _Tile position_
 
-### Get weight
+### ⚡️ Get weight
 ```ts
 const weight = pathfinder.getWeight(
   position: PathfindingPosition,
