@@ -26,9 +26,9 @@ export class Pathfinding {
   private readonly events: PathfindingEvents;
 
   /**
-   * Spawn pathfinding worker thread.
+   * Create pathfinding worker thread.
    *
-   * @param grid - Grid (or layers of grid) with walkable tiles. Order of indexes is grid[y][x]
+   * @param grid - Grid (or layers of grids) with walkable tiles
    */
   constructor(grid: Record<string, PathfindingGrid> | PathfindingGrid) {
     // Trigger webpack worker build
@@ -66,7 +66,7 @@ export class Pathfinding {
   }
 
   /**
-   * Add a new layer grid.
+   * Add new layer of grid.
    *
    * @param layer - Layer name
    * @param grid - Grid with walkable tiles
@@ -81,7 +81,7 @@ export class Pathfinding {
   }
 
   /**
-   * Get layer grid.
+   * Get layer of grid.
    *
    * @param layer - Layer name
    */
@@ -90,7 +90,7 @@ export class Pathfinding {
   }
 
   /**
-   * Remove exist layer grid.
+   * Remove exist layer of grid.
    *
    * @param layer - Layer name
    */
@@ -119,7 +119,6 @@ export class Pathfinding {
     }
 
     if (this.isWalkable(position, layer) === state) {
-      console.log('curr', this.isWalkable(position, layer));
       return;
     }
 
@@ -202,7 +201,7 @@ export class Pathfinding {
    * Create a new task to find path between two tiles.
    *
    * @param config - Task configuration
-   * @param callback - Callback with result path
+   * @param callback - Callback with result
    *
    * @returns Id of created task
    */
@@ -216,33 +215,33 @@ export class Pathfinding {
       throw Error(`Layer of pathfinding grid '${layer}' is not found`);
     }
 
-    const idTask = ++this.lastTaskId;
+    const id = ++this.lastTaskId;
 
     this.events.send(PathfindingEvent.CreateTask, {
       ...config,
       layer,
-      idTask,
+      idTask: id,
     });
 
-    this.resultCallbacks.set(idTask, callback);
+    this.resultCallbacks.set(id, callback);
 
-    return idTask;
+    return id;
   }
 
   /**
    * Cancel exist task by id.
    *
-   * @param idTask - Task id
+   * @param id - Task id
    */
-  public cancelTask(idTask: number): void {
-    if (!this.resultCallbacks.has(idTask)) {
-      throw Error(`Pathfinding task with id '${idTask}' is not found`);
+  public cancelTask(id: number): void {
+    if (!this.resultCallbacks.has(id)) {
+      throw Error(`Pathfinding task with id '${id}' is not found`);
     }
 
     this.events.send(PathfindingEvent.CancelTask, {
-      idTask,
+      idTask: id,
     });
 
-    this.resultCallbacks.delete(idTask);
+    this.resultCallbacks.delete(id);
   }
 }

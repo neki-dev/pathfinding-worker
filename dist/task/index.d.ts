@@ -16,5 +16,5 @@ export declare class PathfindingTask {
     pickNode(position: Position): PathfindingNode;
     takeLastNode(): PathfindingNode | null;
     useNode(current: PathfindingNode, next: PathfindingNode, weight: number): void;
-    getNextWeight(currentNode: PathfindingNode, shift: Position, points: number[][]): number;
+    getNextWeight(currentNode: PathfindingNode, shift: Position, weights: number[][]): number;
 }

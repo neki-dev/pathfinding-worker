@@ -9,9 +9,9 @@ export declare class Pathfinding {
     private resultCallbacks;
     private readonly events;
     /**
-     * Spawn pathfinding worker thread.
+     * Create pathfinding worker thread.
      *
-     * @param grid - Grid (or layers of grid) with walkable tiles. Order of indexes is grid[y][x]
+     * @param grid - Grid (or layers of grids) with walkable tiles
      */
     constructor(grid: Record<string, PathfindingGrid> | PathfindingGrid);
     /**
@@ -19,20 +19,20 @@ export declare class Pathfinding {
      */
     destroy(): void;
     /**
-     * Add a new layer grid.
+     * Add new layer of grid.
      *
      * @param layer - Layer name
      * @param grid - Grid with walkable tiles
      */
     addLayer(layer: string, grid: PathfindingGrid): void;
     /**
-     * Get layer grid.
+     * Get layer of grid.
      *
      * @param layer - Layer name
      */
     getLayer(layer: string): PathfindingGrid;
     /**
-     * Remove exist layer grid.
+     * Remove exist layer of grid.
      *
      * @param layer - Layer name
      */
@@ -75,7 +75,7 @@ export declare class Pathfinding {
      * Create a new task to find path between two tiles.
      *
      * @param config - Task configuration
-     * @param callback - Callback with result path
+     * @param callback - Callback with result
      *
      * @returns Id of created task
      */
@@ -83,7 +83,7 @@ export declare class Pathfinding {
     /**
      * Cancel exist task by id.
      *
-     * @param idTask - Task id
+     * @param id - Task id
      */
-    cancelTask(idTask: number): void;
+    cancelTask(id: number): void;
 }

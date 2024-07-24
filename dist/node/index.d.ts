@@ -13,5 +13,5 @@ export declare class PathfindingNode {
     getParent(): PathfindingNode | null;
     setParent(parent: PathfindingNode): void;
     compute(): PathfindingTaskResult;
-    getNextWeight(shift: Position, points: number[][]): number;
+    getNextWeight(shift: Position, weights: number[][]): number;
 }

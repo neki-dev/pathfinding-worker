@@ -5,7 +5,7 @@ export type PathfindingTaskConfig = {
   /** End tile position */
   to: Position;
 
-  /** Layer of grid if pathfinder has a few grids */
+  /** Layer of grid if pathfinder has a few layers */
   layer?: string;
 };
 

@@ -57,18 +57,18 @@ export class PathfindingNode {
     return { path, weight };
   }
 
-  public getNextWeight(shift: Position, points: number[][]): number {
+  public getNextWeight(shift: Position, weights: number[][]): number {
     const nextPosition = {
       x: this.position.x + shift.x,
       y: this.position.y + shift.y,
     };
-    const weight = points[nextPosition.y]?.[nextPosition.x] ?? 1.0;
+    const weight = weights[nextPosition.y]?.[nextPosition.x] ?? 1.0;
 
     if (Math.abs(shift.x) + Math.abs(shift.y) !== 1) {
       return (
         weight * Math.SQRT2 +
-        (points[this.position.y]?.[nextPosition.x] ?? 0.0) +
-        (points[nextPosition.y]?.[this.position.x] ?? 0.0)
+        (weights[this.position.y]?.[nextPosition.x] ?? 0.0) +
+        (weights[nextPosition.y]?.[this.position.x] ?? 0.0)
       );
     }
 

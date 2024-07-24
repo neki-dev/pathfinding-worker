@@ -113,7 +113,7 @@ describe('Pathfinding', () => {
     });
   });
 
-  describe('Point walkable', () => {
+  describe('Tile walkable', () => {
     it('should get walkable', () => {
       expect(pathfinding.isWalkable({ x: 0, y: 0 })).toBe(true);
       expect(pathfinding.isWalkable({ x: 5, y: 5 })).toBe(false);
@@ -160,7 +160,7 @@ describe('Pathfinding', () => {
     });
   });
 
-  describe('Point weight', () => {
+  describe('Tile weight', () => {
     it('should get weight', () => {
       pathfinding.setWeight({ x: 0, y: 0 }, 10);
 

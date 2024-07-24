@@ -85,8 +85,8 @@ export class PathfindingTask {
   public getNextWeight(
     currentNode: PathfindingNode,
     shift: Position,
-    points: number[][],
+    weights: number[][],
   ): number {
-    return currentNode.getWeight() + currentNode.getNextWeight(shift, points);
+    return currentNode.getWeight() + currentNode.getNextWeight(shift, weights);
   }
 }
