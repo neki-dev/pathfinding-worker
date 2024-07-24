@@ -35,7 +35,7 @@ const pathfinding = new Pathfinding(
   grid: Record<string, PathfindingGrid> | PathfindingGrid
 )
 ```
-[`grid`] - _Grid (or layers of grids) with walkable tiles_
+* `grid` - _Grid (or layers of grids) with walkable tiles_
 
 ### ⚡️ Terminate worker thread
 ```ts
@@ -53,9 +53,8 @@ pathfinding.addLayer(
   grid: PathfindingGrid,
 )
 ```
-[`name`] - _Layer name_
-
-[`grid`] - _Grid with walkable tiles_
+* `name` - _Layer name_
+* `grid` - _Grid with walkable tiles_
 
 ### ⚡️ Get layer of grid
 ```ts
@@ -63,7 +62,7 @@ const layer = pathfinding.getLayer(
   name: string, 
 )
 ```
-[`name`] - _Layer name_
+* `name` - _Layer name_
 
 ### ⚡️ Remove exist layer of grid
 ```ts
@@ -71,7 +70,7 @@ pathfinding.removeLayer(
   name: string, 
 )
 ```
-[`name`] - _Layer name_
+* `name` - _Layer name_
 
 .
 
@@ -84,7 +83,7 @@ const idTask = pathfinder.createTask(
   callback: PathfindingTaskCallback,
 )
 ```
-[`config`] - _Task configuration_
+* `config` - _Task configuration_
  
 | Prop | Description | Required |
 | ---- | ----------- | ------- | 
@@ -92,13 +91,13 @@ const idTask = pathfinder.createTask(
 | to | End tile position | yes |
 | layer | Layer of grid if pathfinder has a few layers | - |
 
-[`callback`] - _Callback with result_
+* `callback` - _Callback with result_
 
 ### ⚡️ Cancel pathfinder task
 ```ts
 pathfinder.cancelTask(id: number)
 ```
-[`id`] - _Task id_
+* `id` - _Task id_
 
 .
 
@@ -112,11 +111,9 @@ pathfinder.setWalkable(
   layer?: string,
 )
 ```
-[`position`] - _Tile position_
-
-[`state`] - _Walkable state_
-
-[`layer`] - _Layer of grid if pathfinder has a few layers_
+* `position` - _Tile position_
+* `state` - _Walkable state_
+* `layer` - _Layer of grid if pathfinder has a few layers_
 
 ### ⚡️ Get walkable state
 ```ts
@@ -124,7 +121,7 @@ const walkable = pathfinder.isWalkable(
   position: PathfindingPosition,
 )
 ```
-[`position`] - _Tile position_
+* `position` - _Tile position_
 
 .
 
@@ -137,9 +134,8 @@ pathfinder.setWeight(
   value: number,
 )
 ```
-[`position`] - _Tile position_
-
-[`value`] - _New weight_
+* `position` - _Tile position_
+* `value` - _New weight_
 
 ### ⚡️ Reset weight
 ```ts
@@ -147,7 +143,7 @@ pathfinder.resetWeight(
   position: PathfindingPosition,
 )
 ```
-[`position`] - _Tile position_
+* `position` - _Tile position_
 
 ### ⚡️ Get weight
 ```ts
@@ -155,4 +151,4 @@ const weight = pathfinder.getWeight(
   position: PathfindingPosition,
 )
 ```
-[`position`] - _Tile position_
+* `position` - _Tile position_
