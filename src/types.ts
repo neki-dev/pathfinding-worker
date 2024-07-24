@@ -10,6 +10,12 @@ export type PathfindingConfig = {
    * Default: ./pathfinder.worker.js
    */
   workerPath?: string;
+
+  /**
+   * Create worker script in runtime mode
+   * Default: true
+   */
+  runtime?: boolean;
 };
 
 export type PathfindingTaskConfig = {

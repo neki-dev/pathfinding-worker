@@ -7,7 +7,7 @@ describe('Pathfinding', () => {
   let pathfinding: Pathfinding;
 
   beforeEach(() => {
-    pathfinding = new Pathfinding();
+    pathfinding = new Pathfinding({ runtime: false });
     pathfinding.addLayer('layer1', mockGrid());
   });
 

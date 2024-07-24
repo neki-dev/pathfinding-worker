@@ -42,6 +42,7 @@ const pathfinding = new Pathfinding(
 | ---- | ----------- | ------- | 
 | loopRate | Finding loop rate | 200 ms |
 | workerPath | Custom path to worker file | ./pathfinder.worker.js |
+| runtime | Create worker script in runtime mode | true |
 
 ### ⚡️ Terminate worker thread
 ```ts

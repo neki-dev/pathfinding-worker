@@ -27,15 +27,16 @@ export class Pathfinding {
    * @param config - Pathfinding configuration
    */
   constructor({
+    runtime = true,
     workerPath = PATHFINDING_DEFUALT_WORKER_FILE_NAME,
     loopRate,
   }: PathfindingConfig = {}) {
-    const runtime = new PathfindingRuntime(workerPath);
-    if (!runtime.workerExists()) {
-      runtime.createWorker();
+    const pr = new PathfindingRuntime(workerPath);
+    if (runtime && !pr.workerExists()) {
+      pr.createWorker();
     }
 
-    this.worker = new Worker(runtime.workerPath, {
+    this.worker = new Worker(pr.workerPath, {
       workerData: { loopRate },
     });
 

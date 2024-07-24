@@ -13,7 +13,7 @@ export declare class Pathfinding {
      *
      * @param config - Pathfinding configuration
      */
-    constructor({ workerPath, loopRate, }?: PathfindingConfig);
+    constructor({ runtime, workerPath, loopRate, }?: PathfindingConfig);
     /**
      * Terminate worker thread.
      */
