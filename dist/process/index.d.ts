@@ -5,7 +5,7 @@ export declare class PathfindingProcess {
     private weights;
     private taskQueue;
     private timer;
-    constructor(rate?: number);
+    constructor(loopRate?: number);
     destroy(): void;
     createTask(task: PathfindingTask): void;
     cancelTask(idTask: number): void;

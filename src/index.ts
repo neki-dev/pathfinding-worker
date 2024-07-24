@@ -3,6 +3,7 @@ import { Worker } from 'worker_threads';
 import { PATHFINDING_DEFUALT_WORKER_FILE_NAME } from './const';
 import { PathfindingEvents } from './events';
 import { PathfindingEvent } from './events/types';
+import { PathfindingRuntime } from './runtime';
 
 import type { PathfindingTaskCallback } from './task/types';
 import type { PathfindingGrid, PathfindingTaskConfig, PathfindingPosition, PathfindingConfig } from './types';
@@ -27,10 +28,15 @@ export class Pathfinding {
    */
   constructor({
     workerPath = PATHFINDING_DEFUALT_WORKER_FILE_NAME,
-    rate,
+    loopRate,
   }: PathfindingConfig = {}) {
-    this.worker = new Worker(workerPath, {
-      workerData: { rate },
+    const runtime = new PathfindingRuntime(workerPath);
+    if (!runtime.workerExists()) {
+      runtime.createWorker();
+    }
+
+    this.worker = new Worker(runtime.workerPath, {
+      workerData: { loopRate },
     });
 
     this.events = new PathfindingEvents(this.worker);

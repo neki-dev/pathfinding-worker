@@ -17,14 +17,14 @@ export class PathfindingProcess {
 
   private timer: NodeJS.Timeout;
 
-  constructor(rate: number = PATHFINDING_PROCESS_LOOP_RATE) {
+  constructor(loopRate: number = PATHFINDING_PROCESS_LOOP_RATE) {
     this.timer = setInterval(() => {
       try {
         this.next();
       } catch (error) {
         console.error('Pathfinding process error:', error);
       }
-    }, rate);
+    }, loopRate);
   }
 
   public destroy(): void {

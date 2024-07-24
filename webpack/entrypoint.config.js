@@ -1,16 +1,17 @@
 const path = require('path');
 
+const root = path.resolve(__dirname, '..');
+
 module.exports = {
   target: 'node',
   resolve: {
     extensions: ['.ts', '.js'],
   },
   entry: {
-    index: path.resolve(__dirname, 'src/index.ts'),
-    worker: path.resolve(__dirname, 'src/worker.ts'),
+    index: path.resolve(root, 'src/index.ts'),
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(root, 'dist'),
     chunkFilename: '[name].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',

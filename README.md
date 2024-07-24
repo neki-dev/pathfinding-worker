@@ -11,7 +11,6 @@ Fast node.js pathfinding on workers for grid-based games.
 Documentation
 
 * [Install](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#install)
-* [Configuration](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#configuration)
 * [General](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#general)
 * [Layers](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#layers)
 * [Finding](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#finding)
@@ -29,26 +28,6 @@ npm i pathfinding-worker
 
 .
 
-## Configuration
-
-### ⚡️ Store module worker
-Add new entry in your webpack.config to store module worker in project dist. Or you may use [webpack 5 workers import](https://webpack.js.org/guides/web-workers/) / [copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugin/)
-```ts
-// webpack.config.js
-
-module.exports = {
-  entry: {
-    // Add new entry
-    'pathfinding.worker': path.resolve(
-      __dirname, 
-      'node_modules/pathfinder-worker/dist/worker.js',
-    ),
-  },
-};
-```
-
-.
-
 ## General
 
 ### ⚡️ Create worker thread
@@ -61,8 +40,8 @@ const pathfinding = new Pathfinding(
  
 | Prop | Description | Default |
 | ---- | ----------- | ------- | 
-| rate | Finding loop rate | 200 ms |
-| workerPath | Path to worker file | ./pathfinder.worker.js |
+| loopRate | Finding loop rate | 200 ms |
+| workerPath | Custom path to worker file | ./pathfinder.worker.js |
 
 ### ⚡️ Terminate worker thread
 ```ts
@@ -190,8 +169,7 @@ const weight = pathfinder.getWeight(
 // index.ts
 
 const pathfinding = new Pathfinding({
-  rate: 500,
-  workerPath: path.resolve(__dirname, 'worker.entry.js'),
+  loopRate: 500,
 });
 
 pathfinding.addLayer('basic', [
@@ -209,22 +187,4 @@ pathfinder.createTask({
   console.log('Result path:', path);
   console.log('Total cost:', cost);
 })
-```
-```ts
-// webpack.config.js
-
-module.exports = {
-  // ...
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-  },
-  entry: {
-    'app': path.resolve(__dirname, 'index.ts'),
-    'worker.entry': path.resolve(
-      __dirname, 
-      'node_modules/pathfinder-worker/dist/worker.js',
-    ),
-  },
-}
 ```

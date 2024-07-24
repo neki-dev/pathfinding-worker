@@ -1,9 +1,9 @@
 export type PathfindingConfig = {
   /**
-   * Finding loop rate
+   * Finding process loop rate
    * Default: 200 ms
    */
-  rate?: number;
+  loopRate?: number;
 
   /**
    * Path to worker file
