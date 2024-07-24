@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Import pre-builded inline worker as string
-import INLINE_WORKER from '../../.temp/worker.inline.js';
+import INLINE_WORKER from '../../.tmp/worker.inline.js';
 
 export class PathfindingRuntime {
   public readonly workerPath: string;

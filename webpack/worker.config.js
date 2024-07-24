@@ -1,5 +1,6 @@
 const path = require('path');
 
+const { WEBPACK_INLINE_WORKER_TEMP_FILE_NAME } = require('./const');
 const InjectWorkerPlugin = require('./worker.plugin');
 
 const root = path.resolve(__dirname, '..');
@@ -11,8 +12,8 @@ module.exports = {
   },
   entry: path.resolve(root, 'src/worker.ts'),
   output: {
-    path: path.resolve(root, '.temp'),
-    filename: 'worker.inline.js',
+    path: path.resolve(root, '.tmp'),
+    filename: WEBPACK_INLINE_WORKER_TEMP_FILE_NAME,
     libraryTarget: 'commonjs2',
     clean: true,
   },

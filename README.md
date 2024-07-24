@@ -166,8 +166,6 @@ const weight = pathfinder.getWeight(
 ## Example
 
 ```ts
-// index.ts
-
 const pathfinding = new Pathfinding({
   loopRate: 500,
 });
