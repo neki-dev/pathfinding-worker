@@ -1,12 +1,13 @@
-import { mockNode } from './__mocks__/node';
-
-import type { PathfindingNode } from '.';
+import { PathfindingNode } from '.';
 
 describe('PathfindingNode', () => {
   let node: PathfindingNode;
 
   beforeEach(() => {
-    node = mockNode();
+    node = new PathfindingNode({
+      position: { x: 0, y: 0 },
+      distance: 1.0,
+    });
   });
 
   it('should return better guess distance', () => {
@@ -30,7 +31,10 @@ describe('PathfindingNode', () => {
   });
 
   it('should change parent', () => {
-    const parent = mockNode();
+    const parent = new PathfindingNode({
+      position: { x: 1, y: 1 },
+      distance: 1.0,
+    });
 
     node.setParent(parent);
 
@@ -45,9 +49,9 @@ describe('PathfindingNode', () => {
   });
 
   it('should return result with parent', () => {
-    const parent = mockNode({
-      position: ({ x: 1, y: 1 }),
-      distance: 1,
+    const parent = new PathfindingNode({
+      position: { x: 1, y: 1 },
+      distance: 1.0,
     });
 
     node.setParent(parent);

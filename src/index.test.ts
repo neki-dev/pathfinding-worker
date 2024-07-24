@@ -1,28 +1,53 @@
 import { mockGrid } from './__mocks__/grid';
-import { mockPathfinding } from './__mocks__/pathfinding';
 import { PathfindingEvent } from './events/types';
 
-import type { Pathfinding } from '.';
+import { Pathfinding } from '.';
 
 describe('Pathfinding', () => {
   let pathfinding: Pathfinding;
 
   beforeEach(() => {
-    pathfinding = mockPathfinding();
+    pathfinding = new Pathfinding();
     pathfinding.addLayer('layer1', mockGrid());
   });
 
+  afterEach(async () => {
+    await pathfinding.destroy();
+  });
+
   describe('Layers', () => {
+    it('should add layer', () => {
+      const grid = mockGrid();
+      pathfinding.addLayer('layer2', grid);
+
+      expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
+        event: PathfindingEvent.AddLayer,
+        payload: {
+          layer: 'layer2',
+          grid,
+        },
+      });
+    });
+
+    it('should remove layer', () => {
+      pathfinding.removeLayer('layer1');
+
+      expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
+        event: PathfindingEvent.RemoveLayer,
+        payload: {
+          layer: 'layer1',
+        },
+      });
+    });
   });
 
   describe('Task', () => {
     it('should create task', () => {
-      const resultCallback = jest.fn();
       const idTask = pathfinding.createTask({
         from: { x: 0, y: 0 },
         to:  { x: 100, y: 100 },
         layer: 'layer1',
-      }, resultCallback);
+      }, jest.fn());
 
       expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
         event: PathfindingEvent.CreateTask,

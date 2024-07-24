@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
-  moduleNameMapper: {
-    '^worker-loader!': 'identity-obj-proxy',
-  },
+  setupFilesAfterEnv: [
+    '<rootDir>/src/__mocks__/worker-module.ts',
+  ],
 };

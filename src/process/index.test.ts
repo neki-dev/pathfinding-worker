@@ -1,17 +1,16 @@
 import { parentPort } from 'worker_threads';
 
 import { mockedPath } from './__mocks__/path';
-import { mockPathfindingProcess } from './__mocks__/process';
 import { mockGrid } from '../__mocks__/grid';
 import { PathfindingTask } from '../task';
 
-import type { PathfindingProcess } from '.';
+import { PathfindingProcess } from '.';
 
 describe('PathfindingProcess', () => {
   let process: PathfindingProcess;
 
   beforeAll(() => {
-    process = mockPathfindingProcess();
+    process = new PathfindingProcess();
     process.addLayer('layer1', mockGrid());
   });
 

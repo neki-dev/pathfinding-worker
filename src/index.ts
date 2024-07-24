@@ -50,8 +50,8 @@ export class Pathfinding {
   /**
    * Terminate worker thread.
    */
-  public destroy(): void {
-    this.worker.terminate();
+  public destroy(): Promise<number> {
+    return this.worker.terminate();
   }
 
   /**
