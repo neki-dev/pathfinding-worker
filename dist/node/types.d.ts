@@ -1,6 +1,6 @@
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 export type PathfindingNodeConfig = {
-    position: Position;
+    position: PathfindingPosition;
     distance: number;
     weight?: number;
 };

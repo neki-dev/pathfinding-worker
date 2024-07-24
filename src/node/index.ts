@@ -1,9 +1,9 @@
 import type { PathfindingNodeConfig } from './types';
 import type { PathfindingTaskResult } from '../task/types';
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 
 export class PathfindingNode {
-  readonly position: Position;
+  readonly position: PathfindingPosition;
 
   readonly distance: number;
 
@@ -42,7 +42,7 @@ export class PathfindingNode {
   }
 
   public compute(): PathfindingTaskResult {
-    const path: Position[] = [{ ...this.position }];
+    const path: PathfindingPosition[] = [{ ...this.position }];
     const weight = this.parent ? this.parent.getWeight() : 0;
 
     let parent = this.getParent();
@@ -57,7 +57,7 @@ export class PathfindingNode {
     return { path, weight };
   }
 
-  public getNextWeight(shift: Position, weights: number[][]): number {
+  public getNextWeight(shift: PathfindingPosition, weights: number[][]): number {
     const nextPosition = {
       x: this.position.x + shift.x,
       y: this.position.y + shift.y,

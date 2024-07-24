@@ -11,9 +11,8 @@ describe('PathfindingProcess', () => {
   let process: PathfindingProcess;
 
   beforeAll(() => {
-    process = mockPathfindingProcess({
-      'layerA': mockGrid(),
-    });
+    process = mockPathfindingProcess();
+    process.addLayer('layer1', mockGrid());
   });
 
   afterAll(() => {
@@ -31,7 +30,7 @@ describe('PathfindingProcess', () => {
       idTask: 1,
       from: { x: 6, y: 16 },
       to: { x: 7, y: 22 },
-      layer: 'layerA',
+      layer: 'layer1',
     }, callback);
 
     process.createTask(task);
@@ -50,7 +49,7 @@ describe('PathfindingProcess', () => {
       idTask: 1,
       from: { x: 0, y: 0 },
       to: { x: 99, y: 99 },
-      layer: 'layerA',
+      layer: 'layer1',
     }, callback);
 
     process.createTask(task);

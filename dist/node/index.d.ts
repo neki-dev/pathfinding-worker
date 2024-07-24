@@ -1,8 +1,8 @@
 import type { PathfindingNodeConfig } from './types';
 import type { PathfindingTaskResult } from '../task/types';
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 export declare class PathfindingNode {
-    readonly position: Position;
+    readonly position: PathfindingPosition;
     readonly distance: number;
     private parent;
     private weight;
@@ -13,5 +13,5 @@ export declare class PathfindingNode {
     getParent(): PathfindingNode | null;
     setParent(parent: PathfindingNode): void;
     compute(): PathfindingTaskResult;
-    getNextWeight(shift: Position, weights: number[][]): number;
+    getNextWeight(shift: PathfindingPosition, weights: number[][]): number;
 }

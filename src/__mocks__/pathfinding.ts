@@ -1,11 +1,11 @@
 import { Pathfinding } from '..';
 
-import type { PathfindingGrid } from '../types';
+import type { PathfindingConfig } from '../types';
 
 export const mockPathfinding = (
-  grid: Record<string, PathfindingGrid> | PathfindingGrid,
+  config?: PathfindingConfig,
 ) => {
-  const pf = new Pathfinding(grid);
+  const pf = new Pathfinding(config);
   pf.worker.postMessage = jest.fn();
   return pf;
 };

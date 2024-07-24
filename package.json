@@ -1,6 +1,6 @@
 {
   "name": "pathfinding-worker",
-  "description": "Fast pathfinding in a separate node.js thread for grid-based games",
+  "description": "Fast node.js pathfinding on workers for grid-based games",
   "version": "0.1.0",
   "keywords": [
     "astar",
@@ -38,15 +38,14 @@
     "@typescript-eslint/parser": "7.16.1",
     "eslint": "8.56.0",
     "eslint-plugin-import": "2.29.1",
-    "identity-obj-proxy": "^3.0.0",
+    "identity-obj-proxy": "3.0.0",
     "jest": "29.7.0",
     "ts-jest": "29.1.2",
     "ts-loader": "9.5.1",
     "typescript": "5.5.3",
     "typescript-eslint": "7.16.1",
     "webpack": "5.93.0",
-    "webpack-cli": "5.1.4",
-    "worker-loader": "3.0.8"
+    "webpack-cli": "5.1.4"
   },
   "repository": {
     "type": "git",

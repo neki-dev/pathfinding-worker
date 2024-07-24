@@ -1,6 +1,5 @@
 import { mockGrid } from './__mocks__/grid';
 import { mockPathfinding } from './__mocks__/pathfinding';
-import { PATHFINDING_DEFUALT_LAYER } from './const';
 import { PathfindingEvent } from './events/types';
 
 import type { Pathfinding } from '.';
@@ -9,7 +8,8 @@ describe('Pathfinding', () => {
   let pathfinding: Pathfinding;
 
   beforeEach(() => {
-    pathfinding = mockPathfinding(mockGrid());
+    pathfinding = mockPathfinding();
+    pathfinding.addLayer('layer1', mockGrid());
   });
 
   describe('Layers', () => {
@@ -17,28 +17,6 @@ describe('Pathfinding', () => {
 
   describe('Task', () => {
     it('should create task', () => {
-      const resultCallback = jest.fn();
-      const idTask = pathfinding.createTask({
-        from: { x: 0, y: 0 },
-        to:  { x: 100, y: 100 },
-      }, resultCallback);
-
-      expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
-        event: PathfindingEvent.CreateTask,
-        payload: {
-          idTask,
-          from: { x: 0, y: 0 },
-          to: { x: 100, y: 100 },
-          layer: PATHFINDING_DEFUALT_LAYER,
-        },
-      });
-    });
-
-    it('should create task with layers', () => {
-      pathfinding = mockPathfinding({
-        'layer1': mockGrid(),
-      });
-
       const resultCallback = jest.fn();
       const idTask = pathfinding.createTask({
         from: { x: 0, y: 0 },
@@ -76,6 +54,7 @@ describe('Pathfinding', () => {
       const idTask = pathfinding.createTask({
         from: { x: 0, y: 0 },
         to:  { x: 100, y: 100 },
+        layer: 'layer1',
       }, jest.fn());
 
       pathfinding.cancelTask(idTask);
@@ -102,6 +81,7 @@ describe('Pathfinding', () => {
       const idTask = pathfinding.createTask({
         from: { x: 0, y: 0 },
         to:  { x: 100, y: 100 },
+        layer: 'layer1',
       }, callback);
 
       pathfinding.worker.emit('message', {
@@ -115,28 +95,12 @@ describe('Pathfinding', () => {
 
   describe('Tile walkable', () => {
     it('should get walkable', () => {
-      expect(pathfinding.isWalkable({ x: 0, y: 0 })).toBe(true);
-      expect(pathfinding.isWalkable({ x: 5, y: 5 })).toBe(false);
+      expect(pathfinding.isWalkable('layer1', { x: 0, y: 0 })).toBe(true);
+      expect(pathfinding.isWalkable('layer1', { x: 5, y: 5 })).toBe(false);
     });
 
     it('should set walkable', () => {
-      pathfinding.setWalkable({ x: 0, y: 0 }, false);
-
-      expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
-        event: PathfindingEvent.SetWalkable,
-        payload: {
-          layer: PATHFINDING_DEFUALT_LAYER,
-          position: { x: 0, y: 0 },
-          state: false,
-        },
-      });
-    });
-
-    it('should set walkable for specified layer', () => {
-      pathfinding = mockPathfinding({
-        'layer1': mockGrid(),
-      });
-      pathfinding.setWalkable({ x: 0, y: 0 }, false, 'layer1');
+      pathfinding.setWalkable('layer1', { x: 0, y: 0 }, false);
 
       expect(pathfinding.worker.postMessage).toHaveBeenCalledWith({
         event: PathfindingEvent.SetWalkable,
@@ -151,7 +115,7 @@ describe('Pathfinding', () => {
     it('should throw error if layer is not found', () => {
       let error = '';
       try {
-        pathfinding.setWalkable({ x: 0, y: 0 }, false, 'layer2');
+        pathfinding.setWalkable('layer2', { x: 0, y: 0 }, false);
       } catch (e) {
         error = (e as Error).message;
       }

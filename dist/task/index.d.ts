@@ -1,9 +1,9 @@
 import { PathfindingNode } from '../node';
 import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 export declare class PathfindingTask {
-    readonly from: Position;
-    readonly to: Position;
+    readonly from: PathfindingPosition;
+    readonly to: PathfindingPosition;
     readonly id: number;
     readonly layer: string;
     private tree;
@@ -11,10 +11,10 @@ export declare class PathfindingTask {
     readonly complete: (result: PathfindingTaskResult) => void;
     constructor({ idTask, from, to, layer }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void);
     private getDistanceFrom;
-    addNode(parent: PathfindingNode, position: Position, weight: number): void;
+    addNode(parent: PathfindingNode, position: PathfindingPosition, weight: number): void;
     private pushNode;
-    pickNode(position: Position): PathfindingNode;
+    pickNode(position: PathfindingPosition): PathfindingNode;
     takeLastNode(): PathfindingNode | null;
     useNode(current: PathfindingNode, next: PathfindingNode, weight: number): void;
-    getNextWeight(currentNode: PathfindingNode, shift: Position, weights: number[][]): number;
+    getNextWeight(currentNode: PathfindingNode, shift: PathfindingPosition, weights: number[][]): number;
 }

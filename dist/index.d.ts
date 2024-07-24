@@ -1,6 +1,6 @@
 import { Worker } from 'worker_threads';
 import type { PathfindingTaskCallback } from './task/types';
-import type { PathfindingGrid, PathfindingTaskConfig, Position } from './types';
+import type { PathfindingGrid, PathfindingTaskConfig, PathfindingPosition, PathfindingConfig } from './types';
 export declare class Pathfinding {
     readonly worker: Worker;
     private weights;
@@ -11,9 +11,9 @@ export declare class Pathfinding {
     /**
      * Create pathfinding worker thread.
      *
-     * @param grid - Grid (or layers of grids) with walkable tiles
+     * @param config - Pathfinding configuration
      */
-    constructor(grid: Record<string, PathfindingGrid> | PathfindingGrid);
+    constructor({ workerPath, rate, }?: PathfindingConfig);
     /**
      * Terminate worker thread.
      */
@@ -40,37 +40,37 @@ export declare class Pathfinding {
     /**
      * Update walkable state of tile.
      *
+     * @param layer - Layer of grid
      * @param position - Tile position
      * @param state - Walkable state
-     * @param layer - Layer of grid if pathfinder has a few layers
      */
-    setWalkable(position: Position, state: boolean, layer?: string): void;
+    setWalkable(layer: string, position: PathfindingPosition, state: boolean): void;
     /**
      * Get walkable state of tile.
      *
+     * @param layer - Layer of grid
      * @param position - Tile position
-     * @param layer - Layer of grid if pathfinder has a few layers
      */
-    isWalkable(position: Position, layer?: string): boolean;
+    isWalkable(layer: string, position: PathfindingPosition): boolean;
     /**
      * Update tile weight.
      *
      * @param position - Tile position
      * @param value - New weight
      */
-    setWeight(position: Position, value: number): void;
+    setWeight(position: PathfindingPosition, value: number): void;
     /**
      * Set tile weight to default value.
      *
      * @param position - Tile position
      */
-    resetWeight(position: Position): void;
+    resetWeight(position: PathfindingPosition): void;
     /**
      * Get tile weight.
      *
      * @param position - Tile position
      */
-    getWeight(position: Position): number;
+    getWeight(position: PathfindingPosition): number;
     /**
      * Create a new task to find path between two tiles.
      *

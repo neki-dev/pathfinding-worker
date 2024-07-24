@@ -1,16 +1,16 @@
 import { parentPort, workerData } from 'worker_threads';
 
-import { PathfindingEvents } from '../events';
-import { PathfindingEvent } from '../events/types';
-import { PathfindingProcess } from '../process';
-import { PathfindingTask } from '../task';
+import { PathfindingEvents } from './events';
+import { PathfindingEvent } from './events/types';
+import { PathfindingProcess } from './process';
+import { PathfindingTask } from './task';
 
 if (!parentPort) {
   throw Error('Undefined parent port of pathfinding worker');
 }
 
 const events = new PathfindingEvents(parentPort);
-const process = new PathfindingProcess(workerData.grids);
+const process = new PathfindingProcess(workerData.rate);
 
 events.on(PathfindingEvent.CreateTask, (payload) => {
   const task = new PathfindingTask(payload, (result) => {
@@ -37,4 +37,12 @@ events.on(PathfindingEvent.SetWeight, (payload) => {
 
 events.on(PathfindingEvent.SetWalkable, (payload) => {
   process.setWalkable(payload.layer, payload.position, payload.state);
+});
+
+events.on(PathfindingEvent.AddLayer, (payload) => {
+  process.addLayer(payload.layer, payload.grid);
+});
+
+events.on(PathfindingEvent.RemoveLayer, (payload) => {
+  process.removeLayer(payload.layer);
 });

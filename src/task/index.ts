@@ -1,15 +1,14 @@
 import Heap from 'heap';
 
-import { PATHFINDING_DEFUALT_LAYER } from '../const';
 import { PathfindingNode } from '../node';
 
 import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 
 export class PathfindingTask {
-  readonly from: Position;
+  readonly from: PathfindingPosition;
 
-  readonly to: Position;
+  readonly to: PathfindingPosition;
 
   readonly id: number;
 
@@ -25,7 +24,7 @@ export class PathfindingTask {
     this.id = idTask;
     this.from = { ...from };
     this.to = { ...to };
-    this.layer = layer ?? PATHFINDING_DEFUALT_LAYER;
+    this.layer = layer;
     this.complete = onComplete;
 
     this.nodes = new Heap<PathfindingNode>(
@@ -41,13 +40,13 @@ export class PathfindingTask {
     this.pushNode(node);
   }
 
-  private getDistanceFrom(position: Position): number {
+  private getDistanceFrom(position: PathfindingPosition): number {
     return Math.sqrt(
       (position.x - this.to.x) ** 2 + (position.y - this.to.y) ** 2,
     );
   }
 
-  public addNode(parent: PathfindingNode, position: Position, weight: number): void {
+  public addNode(parent: PathfindingNode, position: PathfindingPosition, weight: number): void {
     const node = new PathfindingNode({
       position,
       distance: this.getDistanceFrom(position),
@@ -67,7 +66,7 @@ export class PathfindingTask {
     this.tree[node.position.y][node.position.x] = node;
   }
 
-  public pickNode(position: Position): PathfindingNode {
+  public pickNode(position: PathfindingPosition): PathfindingNode {
     return this.tree[position.y]?.[position.x];
   }
 
@@ -84,7 +83,7 @@ export class PathfindingTask {
 
   public getNextWeight(
     currentNode: PathfindingNode,
-    shift: Position,
+    shift: PathfindingPosition,
     weights: number[][],
   ): number {
     return currentNode.getWeight() + currentNode.getNextWeight(shift, weights);

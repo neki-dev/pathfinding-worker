@@ -1,23 +1,18 @@
-// @ts-ignore
-import PathfindingWorker from 'worker-loader!./worker';
 import { Worker } from 'worker_threads';
 
-import {
-  PATHFINDING_DEFUALT_LAYER,
-  PATHFINDING_WORKER_DIST_FILE_NAME,
-} from './const';
+import { PATHFINDING_DEFUALT_WORKER_FILE_NAME } from './const';
 import { PathfindingEvents } from './events';
 import { PathfindingEvent } from './events/types';
 
 import type { PathfindingTaskCallback } from './task/types';
-import type { PathfindingGrid, PathfindingTaskConfig, Position } from './types';
+import type { PathfindingGrid, PathfindingTaskConfig, PathfindingPosition, PathfindingConfig } from './types';
 
 export class Pathfinding {
   public readonly worker: Worker;
 
   private weights: number[][] = [];
 
-  private layers: Record<string, PathfindingGrid>;
+  private layers: Record<string, PathfindingGrid> = {};
 
   private lastTaskId: number = 0;
 
@@ -28,20 +23,14 @@ export class Pathfinding {
   /**
    * Create pathfinding worker thread.
    *
-   * @param grid - Grid (or layers of grids) with walkable tiles
+   * @param config - Pathfinding configuration
    */
-  constructor(grid: Record<string, PathfindingGrid> | PathfindingGrid) {
-    // Trigger webpack worker build
-    void PathfindingWorker;
-
-    this.layers = Array.isArray(grid)
-      ? { [PATHFINDING_DEFUALT_LAYER]: grid }
-      : grid;
-
-    this.worker = new Worker(PATHFINDING_WORKER_DIST_FILE_NAME, {
-      workerData: {
-        layers: this.layers,
-      },
+  constructor({
+    workerPath = PATHFINDING_DEFUALT_WORKER_FILE_NAME,
+    rate,
+  }: PathfindingConfig = {}) {
+    this.worker = new Worker(workerPath, {
+      workerData: { rate },
     });
 
     this.events = new PathfindingEvents(this.worker);
@@ -109,16 +98,16 @@ export class Pathfinding {
   /**
    * Update walkable state of tile.
    *
+   * @param layer - Layer of grid
    * @param position - Tile position
    * @param state - Walkable state
-   * @param layer - Layer of grid if pathfinder has a few layers
    */
-  public setWalkable(position: Position, state: boolean, layer = PATHFINDING_DEFUALT_LAYER): void {
+  public setWalkable(layer: string, position: PathfindingPosition, state: boolean): void {
     if (!this.layers[layer]) {
       throw Error(`Layer of pathfinding grid '${layer}' is not found`);
     }
 
-    if (this.isWalkable(position, layer) === state) {
+    if (this.isWalkable(layer, position) === state) {
       return;
     }
 
@@ -137,10 +126,10 @@ export class Pathfinding {
   /**
    * Get walkable state of tile.
    *
+   * @param layer - Layer of grid
    * @param position - Tile position
-   * @param layer - Layer of grid if pathfinder has a few layers
    */
-  public isWalkable(position: Position, layer = PATHFINDING_DEFUALT_LAYER): boolean {
+  public isWalkable(layer: string, position: PathfindingPosition): boolean {
     if (!this.layers[layer]) {
       throw Error(`Layer of pathfinding grid '${layer}' is not found`);
     }
@@ -154,7 +143,7 @@ export class Pathfinding {
    * @param position - Tile position
    * @param value - New weight
    */
-  public setWeight(position: Position, value: number): void {
+  public setWeight(position: PathfindingPosition, value: number): void {
     if (this.getWeight(position) === value) {
       return;
     }
@@ -175,7 +164,7 @@ export class Pathfinding {
    *
    * @param position - Tile position
    */
-  public resetWeight(position: Position): void {
+  public resetWeight(position: PathfindingPosition): void {
     if (this.weights[position.y]?.[position.x] === undefined) {
       return;
     }
@@ -193,7 +182,7 @@ export class Pathfinding {
    *
    * @param position - Tile position
    */
-  public getWeight(position: Position): number {
+  public getWeight(position: PathfindingPosition): number {
     return this.weights[position.y]?.[position.x] ?? 1.0;
   }
 
@@ -209,17 +198,14 @@ export class Pathfinding {
     config: PathfindingTaskConfig,
     callback: PathfindingTaskCallback,
   ): number {
-    const layer = config.layer ?? PATHFINDING_DEFUALT_LAYER;
-
-    if (!this.layers[layer]) {
-      throw Error(`Layer of pathfinding grid '${layer}' is not found`);
+    if (!this.layers[config.layer]) {
+      throw Error(`Layer of pathfinding grid '${config.layer}' is not found`);
     }
 
     const id = ++this.lastTaskId;
 
     this.events.send(PathfindingEvent.CreateTask, {
       ...config,
-      layer,
       idTask: id,
     });
 

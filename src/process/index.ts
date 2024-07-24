@@ -6,10 +6,10 @@ import {
 
 import type { PathfindingNode } from '../node';
 import type { PathfindingTask } from '../task';
-import type { PathfindingGrid, Position } from '../types';
+import type { PathfindingGrid, PathfindingPosition } from '../types';
 
 export class PathfindingProcess {
-  private grids: Record<string, PathfindingGrid>;
+  private layers: Record<string, PathfindingGrid> = {};
 
   private weights: number[][] = [];
 
@@ -17,15 +17,14 @@ export class PathfindingProcess {
 
   private timer: NodeJS.Timeout;
 
-  constructor(grids: Record<string, PathfindingGrid>) {
-    this.grids = grids;
+  constructor(rate: number = PATHFINDING_PROCESS_LOOP_RATE) {
     this.timer = setInterval(() => {
       try {
         this.next();
       } catch (error) {
-        console.error(error);
+        console.error('Pathfinding process error:', error);
       }
-    }, PATHFINDING_PROCESS_LOOP_RATE);
+    }, rate);
   }
 
   public destroy(): void {
@@ -43,21 +42,31 @@ export class PathfindingProcess {
     }
   }
 
-  public setWeight(position: Position, weight: number): void {
+  public addLayer(layer: string, grid: PathfindingGrid): void {
+    this.layers[layer] = grid;
+  }
+
+  public removeLayer(layer: string): void {
+    if (this.layers[layer]) {
+      delete this.layers[layer];
+    }
+  }
+
+  public setWeight(position: PathfindingPosition, weight: number): void {
     if (!this.weights[position.y]) {
       this.weights[position.y] = [];
     }
     this.weights[position.y][position.x] = weight;
   }
 
-  public resetWeight(position: Position): void {
+  public resetWeight(position: PathfindingPosition): void {
     if (this.weights[position.y]) {
       delete this.weights[position.y][position.x];
     }
   }
 
-  public setWalkable(layer: string, position: Position, state: boolean) {
-    const grid = this.grids[layer];
+  public setWalkable(layer: string, position: PathfindingPosition, state: boolean) {
+    const grid = this.layers[layer];
     if (!grid) {
       return;
     }
@@ -115,9 +124,9 @@ export class PathfindingProcess {
   private getNextDirections(
     task: PathfindingTask,
     node: PathfindingNode,
-  ): Position[] {
+  ): PathfindingPosition[] {
     const straightClear: Record<string, boolean> = {};
-    const allowedDirs: Position[] = [];
+    const allowedDirs: PathfindingPosition[] = [];
 
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT).forEach(
       ([key, direction]) => {
@@ -140,11 +149,11 @@ export class PathfindingProcess {
     return allowedDirs;
   }
 
-  private isWalkable(node: PathfindingNode, layer: string, direction: Position) {
+  private isWalkable(node: PathfindingNode, layer: string, direction: PathfindingPosition) {
     const position = {
       x: node.position.x + direction.x,
       y: node.position.y + direction.y,
     };
-    return Boolean(this.grids[layer]?.[position.y]?.[position.x]);
+    return Boolean(this.layers[layer]?.[position.y]?.[position.x]);
   }
 }

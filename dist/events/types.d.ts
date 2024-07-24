@@ -1,5 +1,5 @@
 import type { PathfindingTaskResult } from '../task/types';
-import type { PathfindingGrid, Position } from '../types';
+import type { PathfindingGrid, PathfindingPosition } from '../types';
 export declare enum PathfindingEvent {
     CreateTask = "CreateTask",
     CompleteTask = "CompleteTask",
@@ -12,19 +12,19 @@ export declare enum PathfindingEvent {
 export type PathfindingEventPayload = {
     [PathfindingEvent.CreateTask]: {
         idTask: number;
-        from: Position;
-        to: Position;
-        layer?: string;
+        from: PathfindingPosition;
+        to: PathfindingPosition;
+        layer: string;
     };
     [PathfindingEvent.CancelTask]: {
         idTask: number;
     };
     [PathfindingEvent.SetWeight]: {
-        position: Position;
+        position: PathfindingPosition;
         value: number | null;
     };
     [PathfindingEvent.SetWalkable]: {
-        position: Position;
+        position: PathfindingPosition;
         state: boolean;
         layer: string;
     };

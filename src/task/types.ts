@@ -1,14 +1,14 @@
-import type { Position } from '../types';
+import type { PathfindingPosition } from '../types';
 
 export type PathfindingTaskConfig = {
   idTask: number;
-  from: Position;
-  to: Position;
-  layer?: string;
+  from: PathfindingPosition;
+  to: PathfindingPosition;
+  layer: string;
 };
 
 export type PathfindingTaskResult = {
-  path: Position[] | null;
+  path: PathfindingPosition[] | null;
   weight: number;
 };
 

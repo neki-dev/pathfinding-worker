@@ -1,12 +1,30 @@
-export type PathfindingTaskConfig = {
-    /** Begin tile position */
-    from: Position;
-    /** End tile position */
-    to: Position;
-    /** Layer of grid if pathfinder has a few layers */
-    layer?: string;
+export type PathfindingConfig = {
+    /**
+     * Finding loop rate
+     * Default: 200 ms
+     */
+    rate?: number;
+    /**
+     * Path to worker file
+     * Default: ./pathfinder.worker.js
+     */
+    workerPath?: string;
 };
-export type Position = {
+export type PathfindingTaskConfig = {
+    /**
+     * Layer of grid
+     */
+    layer: string;
+    /**
+     * Begin tile position
+     */
+    from: PathfindingPosition;
+    /**
+     * End tile position
+     */
+    to: PathfindingPosition;
+};
+export type PathfindingPosition = {
     x: number;
     y: number;
 };

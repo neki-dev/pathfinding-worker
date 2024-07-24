@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "commonjs",
-    "target": "esnext",
+    "module": "ESNext",
+    "target": "ESNext",
     "moduleResolution": "node",
     "declaration": true,
     "resolveJsonModule": true,
@@ -14,7 +14,7 @@
     "./src/**/*.ts"
   ],
   "exclude": [
-    "./src/**/__tests__/**",
+    "./src/**/*.test.ts",
     "./src/**/__mocks__/**"
   ]
 }
