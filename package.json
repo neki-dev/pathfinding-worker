@@ -1,8 +1,19 @@
 {
   "name": "pathfinding-worker",
-  "description": "",
+  "description": "Fast pathfinding in a separate node.js thread for grid-based games",
   "version": "0.1.0",
-  "keywords": [],
+  "keywords": [
+    "astar",
+    "dijkstra",
+    "path",
+    "pathfinding",
+    "find",
+    "worker",
+    "way",
+    "node",
+    "grid",
+    "thread"
+  ],
   "license": "MIT",
   "author": {
     "name": "Nikita Galadiy",
