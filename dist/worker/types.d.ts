@@ -12,7 +12,7 @@ export type PathfindingWorkerEventPayload = {
         idTask: number;
         from: Position;
         to: Position;
-        group: string;
+        group?: string;
     };
     [PathfindingWorkerEvent.CancelTask]: {
         idTask: number;

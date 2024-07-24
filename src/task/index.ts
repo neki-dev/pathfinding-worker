@@ -1,9 +1,10 @@
-import Heap from "heap";
+import Heap from 'heap';
 
-import { PathfindingNode } from "../node";
+import { PATHFINDING_DEFUALT_LAYER } from '../const';
+import { PathfindingNode } from '../node';
 
-import type { PathfindingTaskConfig, PathfindingTaskResult } from "./types";
-import type { Position } from "../types";
+import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
+import type { Position } from '../types';
 
 export class PathfindingTask {
   readonly from: Position;
@@ -12,7 +13,7 @@ export class PathfindingTask {
 
   readonly id: number;
 
-  readonly group: string;
+  readonly layer: string;
 
   private tree: PathfindingNode[][] = [];
 
@@ -20,11 +21,11 @@ export class PathfindingTask {
 
   public readonly complete: (result: PathfindingTaskResult) => void;
 
-  constructor({ idTask, from, to, group }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void) {
+  constructor({ idTask, from, to, layer }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void) {
     this.id = idTask;
     this.from = { ...from };
     this.to = { ...to };
-    this.group = group;
+    this.layer = layer ?? PATHFINDING_DEFUALT_LAYER;
     this.complete = onComplete;
 
     this.nodes = new Heap<PathfindingNode>(
@@ -46,11 +47,11 @@ export class PathfindingTask {
     );
   }
 
-  public addNode(parent: PathfindingNode, position: Position, cost: number): void {
+  public addNode(parent: PathfindingNode, position: Position, weight: number): void {
     const node = new PathfindingNode({
       position,
       distance: this.getDistanceFrom(position),
-      cost,
+      weight,
     });
 
     node.setParent(parent);
@@ -74,18 +75,18 @@ export class PathfindingTask {
     return this.nodes.pop() ?? null;
   }
 
-  public useNode(current: PathfindingNode, next: PathfindingNode, cost: number): void {
-    next.setCost(cost);
+  public useNode(current: PathfindingNode, next: PathfindingNode, weight: number): void {
+    next.setWeight(weight);
     next.setParent(current);
 
     this.nodes.updateItem(next);
   }
 
-  public getNextCost(
+  public getNextWeight(
     currentNode: PathfindingNode,
     shift: Position,
     points: number[][],
   ): number {
-    return currentNode.getCost() + currentNode.getNextCost(shift, points);
+    return currentNode.getWeight() + currentNode.getNextWeight(shift, points);
   }
 }

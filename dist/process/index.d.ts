@@ -1,17 +1,17 @@
-import type { Position } from "../types";
-import type { PathfindingTask } from "../task";
+import type { PathfindingTask } from '../task';
+import type { PathfindingGrid, Position } from '../types';
 export declare class PathfindingProcess {
     private grids;
-    private pointsCost;
+    private weights;
     private taskQueue;
     private timer;
-    constructor(grids: Record<string, boolean[][]>);
+    constructor(grids: Record<string, PathfindingGrid>);
     destroy(): void;
     createTask(task: PathfindingTask): void;
     cancelTask(idTask: number): void;
-    setPointCost(position: Position, cost: number): void;
-    resetPointCost(position: Position): void;
-    setWalkable(group: string, position: Position, state: boolean): void;
+    setWeight(position: Position, weight: number): void;
+    resetWeight(position: Position): void;
+    setWalkable(layer: string, position: Position, state: boolean): void;
     private next;
     private getNextDirections;
     private isWalkable;

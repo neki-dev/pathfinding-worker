@@ -2,22 +2,22 @@ import {
   PATHFINDING_PROCESS_LOOP_RATE,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT,
-} from "./const";
+} from './const';
 
-import type { Position } from "../types";
-import type { PathfindingNode } from "../node";
-import type { PathfindingTask } from "../task";
+import type { PathfindingNode } from '../node';
+import type { PathfindingTask } from '../task';
+import type { PathfindingGrid, Position } from '../types';
 
 export class PathfindingProcess {
-  private grids: Record<string, boolean[][]>;
+  private grids: Record<string, PathfindingGrid>;
 
-  private pointsCost: number[][] = [];
+  private weights: number[][] = [];
 
   private taskQueue: PathfindingTask[] = [];
 
   private timer: NodeJS.Timeout;
 
-  constructor(grids: Record<string, boolean[][]>) {
+  constructor(grids: Record<string, PathfindingGrid>) {
     this.grids = grids;
     this.timer = setInterval(() => {
       try {
@@ -43,21 +43,21 @@ export class PathfindingProcess {
     }
   }
 
-  public setPointCost(position: Position, cost: number): void {
-    if (!this.pointsCost[position.y]) {
-      this.pointsCost[position.y] = [];
+  public setWeight(position: Position, weight: number): void {
+    if (!this.weights[position.y]) {
+      this.weights[position.y] = [];
     }
-    this.pointsCost[position.y][position.x] = cost;
+    this.weights[position.y][position.x] = weight;
   }
 
-  public resetPointCost(position: Position): void {
-    if (this.pointsCost[position.y]) {
-      delete this.pointsCost[position.y][position.x];
+  public resetWeight(position: Position): void {
+    if (this.weights[position.y]) {
+      delete this.weights[position.y][position.x];
     }
   }
 
-  public setWalkable(group: string, position: Position, state: boolean) {
-    const grid = this.grids[group];
+  public setWalkable(layer: string, position: Position, state: boolean) {
+    const grid = this.grids[layer];
     if (!grid) {
       return;
     }
@@ -85,19 +85,19 @@ export class PathfindingProcess {
             x: currentNode.position.x + offset.x,
             y: currentNode.position.y + offset.y,
           };
-          const nextCost = task.getNextCost(
+          const nextWeight = task.getNextWeight(
             currentNode,
             offset,
-            this.pointsCost,
+            this.weights,
           );
           const nextNode = task.pickNode(position);
 
           if (nextNode) {
-            if (nextCost < nextNode.getCost()) {
-              task.useNode(currentNode, nextNode, nextCost);
+            if (nextWeight < nextNode.getWeight()) {
+              task.useNode(currentNode, nextNode, nextWeight);
             }
           } else {
-            task.addNode(currentNode, position, nextCost);
+            task.addNode(currentNode, position, nextWeight);
           }
         });
       }
@@ -105,7 +105,7 @@ export class PathfindingProcess {
       this.taskQueue.shift();
       task.complete({
         path: null,
-        cost: Infinity,
+        weight: Infinity,
       });
     }
 
@@ -121,7 +121,7 @@ export class PathfindingProcess {
 
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT).forEach(
       ([key, direction]) => {
-        if (this.isWalkable(node, task.group, direction)) {
+        if (this.isWalkable(node, task.layer, direction)) {
           straightClear[key] = true;
           allowedDirs.push(direction);
         }
@@ -131,7 +131,7 @@ export class PathfindingProcess {
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL).forEach(
       ([key, direction]) => {
         const clear = straightClear[key[0]] && straightClear[key[1]];
-        if (clear && this.isWalkable(node, task.group, direction)) {
+        if (clear && this.isWalkable(node, task.layer, direction)) {
           allowedDirs.push(direction);
         }
       },
@@ -140,11 +140,11 @@ export class PathfindingProcess {
     return allowedDirs;
   }
 
-  private isWalkable(node: PathfindingNode, group: string, direction: Position) {
+  private isWalkable(node: PathfindingNode, layer: string, direction: Position) {
     const position = {
       x: node.position.x + direction.x,
       y: node.position.y + direction.y,
     };
-    return this.grids[group]?.[position.y]?.[position.x];
+    return Boolean(this.grids[layer]?.[position.y]?.[position.x]);
   }
 }

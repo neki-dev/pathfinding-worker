@@ -1,17 +1,17 @@
-import type { Position } from "../types";
-import type { PathfindingTaskResult } from "../task/types";
-import type { PathfindingNodeConfig } from "./types";
+import type { PathfindingNodeConfig } from './types';
+import type { PathfindingTaskResult } from '../task/types';
+import type { Position } from '../types';
 export declare class PathfindingNode {
     readonly position: Position;
     readonly distance: number;
     private parent;
-    private cost;
-    constructor({ position, cost, distance, }: PathfindingNodeConfig);
+    private weight;
+    constructor({ position, weight, distance, }: PathfindingNodeConfig);
     getBetterGuessDistance(): number;
-    getCost(): number;
-    setCost(cost: number): void;
+    getWeight(): number;
+    setWeight(weight: number): void;
     getParent(): PathfindingNode | null;
     setParent(parent: PathfindingNode): void;
     compute(): PathfindingTaskResult;
-    getNextCost(shift: Position, points: number[][]): number;
+    getNextWeight(shift: Position, points: number[][]): number;
 }

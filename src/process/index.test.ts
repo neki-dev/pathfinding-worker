@@ -1,17 +1,18 @@
 import { parentPort } from 'worker_threads';
 
-import { mockedGrid } from '../__mocks__/grid';
 import { mockedPath } from './__mocks__/path';
+import { mockPathfindingProcess } from './__mocks__/process';
+import { mockGrid } from '../__mocks__/grid';
 import { PathfindingTask } from '../task';
 
-import { PathfindingProcess } from '.';
+import type { PathfindingProcess } from '.';
 
 describe('PathfindingProcess', () => {
   let process: PathfindingProcess;
 
   beforeAll(() => {
-    process = new PathfindingProcess({
-      'groupA': mockedGrid,
+    process = mockPathfindingProcess({
+      'layerA': mockGrid(),
     });
   });
 
@@ -30,7 +31,7 @@ describe('PathfindingProcess', () => {
       idTask: 1,
       from: { x: 6, y: 16 },
       to: { x: 7, y: 22 },
-      group: 'groupA',
+      layer: 'layerA',
     }, callback);
 
     process.createTask(task);
@@ -38,7 +39,7 @@ describe('PathfindingProcess', () => {
     process.next();
 
     expect(callback).toHaveBeenCalledWith({
-      cost: 6,
+      weight: 6,
       path: mockedPath,
     });
   });
@@ -49,7 +50,7 @@ describe('PathfindingProcess', () => {
       idTask: 1,
       from: { x: 0, y: 0 },
       to: { x: 99, y: 99 },
-      group: 'groupA',
+      layer: 'layerA',
     }, callback);
 
     process.createTask(task);
@@ -57,7 +58,7 @@ describe('PathfindingProcess', () => {
     process.next();
 
     expect(callback).toHaveBeenCalledWith({
-      cost: Infinity,
+      weight: Infinity,
       path: null,
     });
   });

@@ -1,7 +1,6 @@
-import type { Position } from "../types";
-import type { PathfindingTaskResult } from "../task/types";
-
-import type { PathfindingNodeConfig } from "./types";
+import type { PathfindingNodeConfig } from './types';
+import type { PathfindingTaskResult } from '../task/types';
+import type { Position } from '../types';
 
 export class PathfindingNode {
   readonly position: Position;
@@ -10,28 +9,28 @@ export class PathfindingNode {
 
   private parent: PathfindingNode | null = null;
 
-  private cost: number;
+  private weight: number;
 
   constructor({
     position,
-    cost = 1.0,
+    weight = 1.0,
     distance,
   }: PathfindingNodeConfig) {
     this.position = { ...position };
     this.distance = distance;
-    this.cost = cost;
+    this.weight = weight;
   }
 
   public getBetterGuessDistance(): number {
-    return this.cost + this.distance;
+    return this.weight + this.distance;
   }
 
-  public getCost(): number {
-    return this.cost;
+  public getWeight(): number {
+    return this.weight;
   }
 
-  public setCost(cost: number): void {
-    this.cost = cost;
+  public setWeight(weight: number): void {
+    this.weight = weight;
   }
 
   public getParent(): PathfindingNode | null {
@@ -44,7 +43,7 @@ export class PathfindingNode {
 
   public compute(): PathfindingTaskResult {
     const path: Position[] = [{ ...this.position }];
-    const cost = this.parent ? this.parent.getCost() : 0;
+    const weight = this.parent ? this.parent.getWeight() : 0;
 
     let parent = this.getParent();
 
@@ -55,24 +54,24 @@ export class PathfindingNode {
 
     path.reverse();
 
-    return { path, cost };
+    return { path, weight };
   }
 
-  public getNextCost(shift: Position, points: number[][]): number {
+  public getNextWeight(shift: Position, points: number[][]): number {
     const nextPosition = {
       x: this.position.x + shift.x,
       y: this.position.y + shift.y,
     };
-    const cost = points[nextPosition.y]?.[nextPosition.x] ?? 1.0;
+    const weight = points[nextPosition.y]?.[nextPosition.x] ?? 1.0;
 
     if (Math.abs(shift.x) + Math.abs(shift.y) !== 1) {
       return (
-        cost * Math.SQRT2 +
+        weight * Math.SQRT2 +
         (points[this.position.y]?.[nextPosition.x] ?? 0.0) +
         (points[nextPosition.y]?.[this.position.x] ?? 0.0)
       );
     }
 
-    return cost;
+    return weight;
   }
 }

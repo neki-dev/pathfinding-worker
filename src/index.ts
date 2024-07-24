@@ -1,35 +1,56 @@
 // @ts-ignore
-import PathfindingWorker from "worker-loader!./worker";
-import { Worker } from "worker_threads";
+import PathfindingWorker from 'worker-loader!./worker';
+import { Worker } from 'worker_threads';
 
-import type { PathfindingTaskConfig, Position } from "./types";
-import { PATHFINDING_WORKER_DIST_FILE_NAME } from "./const";
-import type { PathfindingWorkerEventPayload } from "./worker/types";
-import { PathfindingWorkerEvent } from "./worker/types";
-import type { PathfindingTaskResultCallback } from "./task/types";
+import {
+  PATHFINDING_DEFUALT_LAYER,
+  PATHFINDING_WORKER_DIST_FILE_NAME,
+} from './const';
+import { PathfindingEvents } from './events';
+import { PathfindingEvent } from './events/types';
+
+import type { PathfindingTaskCallback } from './task/types';
+import type { PathfindingGrid, PathfindingTaskConfig, Position } from './types';
 
 export class Pathfinding {
-  readonly worker: Worker;
+  public readonly worker: Worker;
 
-  private pointsCost: number[][] = [];
+  private weights: number[][] = [];
+
+  private layers: Record<string, PathfindingGrid>;
 
   private lastTaskId: number = 0;
 
-  private resultCallbacks: Map<number, PathfindingTaskResultCallback> =
-    new Map();
+  private resultCallbacks: Map<number, PathfindingTaskCallback> = new Map();
 
-  constructor(grids: Record<string, boolean[][]>) {
+  private readonly events: PathfindingEvents;
+
+  /**
+   * Spawn pathfinding worker thread.
+   *
+   * @param grid - Grid (or layers of grid) with walkable tiles. Order of indexes is grid[y][x]
+   */
+  constructor(grid: Record<string, PathfindingGrid> | PathfindingGrid) {
     // Trigger webpack worker build
     void PathfindingWorker;
 
+    this.layers = Array.isArray(grid)
+      ? { [PATHFINDING_DEFUALT_LAYER]: grid }
+      : grid;
+
     this.worker = new Worker(PATHFINDING_WORKER_DIST_FILE_NAME, {
-      workerData: { grids },
+      workerData: {
+        layers: this.layers,
+      },
     });
 
-    this.listen(PathfindingWorkerEvent.CompleteTask, (payload) => {
-      const callback = this.getTaskCallback(payload.idTask);
+    this.events = new PathfindingEvents(this.worker);
+
+    this.events.on(PathfindingEvent.CompleteTask, ({ idTask, result }) => {
+      const callback = this.resultCallbacks.get(idTask);
       if (callback) {
-        callback(payload.result);
+        callback(result);
+        this.resultCallbacks.delete(idTask);
       } else {
         // Events occurs for canceled tasks, since the path calculation occurs sequentially in single process.
         // Need to figure out how to interrupt the calculation for a canceled task.
@@ -37,59 +58,169 @@ export class Pathfinding {
     });
   }
 
+  /**
+   * Terminate worker thread.
+   */
   public destroy(): void {
     this.worker.terminate();
   }
 
-  public setWalkable(group: string, position: Position, state: boolean): void {
-    this.send(PathfindingWorkerEvent.SetWalkable, {
+  /**
+   * Add a new layer grid.
+   *
+   * @param layer - Layer name
+   * @param grid - Grid with walkable tiles
+   */
+  public addLayer(layer: string, grid: PathfindingGrid): void {
+    this.layers[layer] = grid;
+
+    this.events.send(PathfindingEvent.AddLayer, {
+      layer,
+      grid,
+    });
+  }
+
+  /**
+   * Get layer grid.
+   *
+   * @param layer - Layer name
+   */
+  public getLayer(layer: string): PathfindingGrid {
+    return this.layers[layer] ?? null;
+  }
+
+  /**
+   * Remove exist layer grid.
+   *
+   * @param layer - Layer name
+   */
+  public removeLayer(layer: string): void {
+    if (!this.layers[layer]) {
+      throw Error(`Layer of pathfinding grid '${layer}' is not found`);
+    }
+
+    delete this.layers[layer];
+
+    this.events.send(PathfindingEvent.RemoveLayer, {
+      layer,
+    });
+  }
+
+  /**
+   * Update walkable state of tile.
+   *
+   * @param position - Tile position
+   * @param state - Walkable state
+   * @param layer - Layer of grid if pathfinder has a few layers
+   */
+  public setWalkable(position: Position, state: boolean, layer = PATHFINDING_DEFUALT_LAYER): void {
+    if (!this.layers[layer]) {
+      throw Error(`Layer of pathfinding grid '${layer}' is not found`);
+    }
+
+    if (this.isWalkable(position, layer) === state) {
+      console.log('curr', this.isWalkable(position, layer));
+      return;
+    }
+
+    if (!this.layers[layer][position.y]) {
+      this.layers[layer][position.y] = [];
+    }
+    this.layers[layer][position.y][position.x] = state;
+
+    this.events.send(PathfindingEvent.SetWalkable, {
       position,
-      group,
+      layer,
       state,
     });
   }
 
-  public setPointCost(position: Position, cost: number): void {
-    if (this.getPointCost(position) === cost) {
+  /**
+   * Get walkable state of tile.
+   *
+   * @param position - Tile position
+   * @param layer - Layer of grid if pathfinder has a few layers
+   */
+  public isWalkable(position: Position, layer = PATHFINDING_DEFUALT_LAYER): boolean {
+    if (!this.layers[layer]) {
+      throw Error(`Layer of pathfinding grid '${layer}' is not found`);
+    }
+
+    return Boolean(this.layers[layer][position.y]?.[position.x]);
+  }
+
+  /**
+   * Update tile weight.
+   *
+   * @param position - Tile position
+   * @param value - New weight
+   */
+  public setWeight(position: Position, value: number): void {
+    if (this.getWeight(position) === value) {
       return;
     }
 
-    if (!this.pointsCost[position.y]) {
-      this.pointsCost[position.y] = [];
+    if (!this.weights[position.y]) {
+      this.weights[position.y] = [];
     }
-    this.pointsCost[position.y][position.x] = cost;
+    this.weights[position.y][position.x] = value;
 
-    this.send(PathfindingWorkerEvent.UpdatePointCost, {
+    this.events.send(PathfindingEvent.SetWeight, {
       position,
-      cost,
+      value,
     });
   }
 
-  public resetPointCost(position: Position): void {
-    if (this.pointsCost[position.y]?.[position.x] === undefined) {
+  /**
+   * Set tile weight to default value.
+   *
+   * @param position - Tile position
+   */
+  public resetWeight(position: Position): void {
+    if (this.weights[position.y]?.[position.x] === undefined) {
       return;
     }
 
-    delete this.pointsCost[position.y][position.x];
+    delete this.weights[position.y][position.x];
 
-    this.send(PathfindingWorkerEvent.UpdatePointCost, {
+    this.events.send(PathfindingEvent.SetWeight, {
       position,
-      cost: null,
+      value: null,
     });
   }
 
-  public getPointCost(position: Position): number {
-    return this.pointsCost[position.y]?.[position.x] ?? 1.0;
+  /**
+   * Get tile weight.
+   *
+   * @param position - Tile position
+   */
+  public getWeight(position: Position): number {
+    return this.weights[position.y]?.[position.x] ?? 1.0;
   }
 
+  /**
+   * Create a new task to find path between two tiles.
+   *
+   * @param config - Task configuration
+   * @param callback - Callback with result path
+   *
+   * @returns Id of created task
+   */
   public createTask(
     config: PathfindingTaskConfig,
-    callback: PathfindingTaskResultCallback,
+    callback: PathfindingTaskCallback,
   ): number {
+    const layer = config.layer ?? PATHFINDING_DEFUALT_LAYER;
+
+    if (!this.layers[layer]) {
+      throw Error(`Layer of pathfinding grid '${layer}' is not found`);
+    }
+
     const idTask = ++this.lastTaskId;
 
-    this.send(PathfindingWorkerEvent.CreateTask, {
+    this.events.send(PathfindingEvent.CreateTask, {
       ...config,
+      layer,
       idTask,
     });
 
@@ -98,33 +229,20 @@ export class Pathfinding {
     return idTask;
   }
 
-  public getTaskCallback(idTask: number): PathfindingTaskResultCallback | null {
-    return this.resultCallbacks.get(idTask) ?? null;
-  }
-
+  /**
+   * Cancel exist task by id.
+   *
+   * @param idTask - Task id
+   */
   public cancelTask(idTask: number): void {
-    this.send(PathfindingWorkerEvent.CancelTask, {
+    if (!this.resultCallbacks.has(idTask)) {
+      throw Error(`Pathfinding task with id '${idTask}' is not found`);
+    }
+
+    this.events.send(PathfindingEvent.CancelTask, {
       idTask,
     });
 
     this.resultCallbacks.delete(idTask);
-  }
-
-  private listen<K extends keyof PathfindingWorkerEventPayload>(
-    event: K,
-    callback: (payload: PathfindingWorkerEventPayload[K]) => void,
-  ): void {
-    this.worker.on("message", (data) => {
-      if (data.event === event) {
-        callback(data.payload);
-      }
-    });
-  }
-
-  private send<K extends keyof PathfindingWorkerEventPayload>(
-    event: K,
-    payload: PathfindingWorkerEventPayload[K],
-  ) {
-    this.worker.postMessage({ event, payload });
   }
 }
