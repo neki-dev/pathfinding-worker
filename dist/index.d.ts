@@ -17,7 +17,7 @@ export declare class Pathfinding {
     /**
      * Terminate worker thread.
      */
-    destroy(): void;
+    destroy(): Promise<number>;
     /**
      * Add new layer of grid.
      *

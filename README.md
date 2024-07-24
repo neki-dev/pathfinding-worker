@@ -17,10 +17,11 @@ Documentation
 * [Finding](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#finding)
 * [Tile walkable](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#tile-walkable)
 * [Tile weight](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#tile-weight)
+* [Example](https://github.com/neki-dev/pathfinding-worker?tab=readme-ov-file#example)
 
 .
 
-# Install
+## Install
 
 ```sh
 npm i pathfinding-worker
@@ -28,29 +29,27 @@ npm i pathfinding-worker
 
 .
 
-# Configuration
+## Configuration
 
 ### ⚡️ Store module worker
 Add new entry in your webpack.config to store module worker in project dist. Or you may use [webpack 5 workers import](https://webpack.js.org/guides/web-workers/) / [copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugin/)
 ```ts
-// ... webpack.config.js
-output: {
-  path: path.resolve(__dirname, 'dist'),
-  filename: '[name].js',
-},
-entry: {
-  // ...
-  // Add new entry
-  'pathfinding.worker': path.resolve(
-    __dirname, 
-    'node_modules/pathfinder-worker/dist/worker.js',
-  ),
-},
+// webpack.config.js
+
+module.exports = {
+  entry: {
+    // Add new entry
+    'pathfinding.worker': path.resolve(
+      __dirname, 
+      'node_modules/pathfinder-worker/dist/worker.js',
+    ),
+  },
+};
 ```
 
 .
 
-# General
+## General
 
 ### ⚡️ Create worker thread
 ```ts
@@ -72,7 +71,7 @@ pathfinding.destroy()
 
 .
 
-# Layers
+## Layers
 
 ### ⚡️ Add new layer of grid
 ```ts
@@ -102,7 +101,7 @@ pathfinding.removeLayer(
 
 .
 
-# Finding
+## Finding
 
 ### ⚡️ Create pathfinder task
 ```ts
@@ -129,7 +128,7 @@ pathfinder.cancelTask(id: number)
 
 .
 
-# Tile walkable
+## Tile walkable
 
 ### ⚡️ Set walkable state
 ```ts
@@ -155,7 +154,7 @@ const walkable = pathfinder.isWalkable(
 
 .
 
-# Tile weight
+## Tile weight
 
 ### ⚡️ Set weight
 ```ts
@@ -182,3 +181,50 @@ const weight = pathfinder.getWeight(
 )
 ```
 * `position` - _Tile position_
+
+.
+
+## Example
+
+```ts
+// index.ts
+
+const pathfinding = new Pathfinding({
+  rate: 500,
+  workerPath: path.resolve(__dirname, 'worker.entry.js'),
+});
+
+pathfinding.addLayer('basic', [
+  [true, true,  true,  true],
+  [true, true,  false, true],
+  [true, false, false, true],
+  [true, false, false, false],
+]);
+
+pathfinder.createTask({
+  layer: 'basic',
+  from: { x: 0, y: 0 },
+  to: { x: 3, y: 2 },
+}, ({ path, cost }) => {
+  console.log('Result path:', path);
+  console.log('Total cost:', cost);
+})
+```
+```ts
+// webpack.config.js
+
+module.exports = {
+  // ...
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+  },
+  entry: {
+    'app': path.resolve(__dirname, 'index.ts'),
+    'worker.entry': path.resolve(
+      __dirname, 
+      'node_modules/pathfinder-worker/dist/worker.js',
+    ),
+  },
+}
+```
