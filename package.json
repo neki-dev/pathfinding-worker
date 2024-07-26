@@ -1,7 +1,7 @@
 {
   "name": "pathfinding-worker",
   "description": "Fast node.js pathfinding on workers for grid-based games",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "keywords": [
     "astar",
     "dijkstra",
