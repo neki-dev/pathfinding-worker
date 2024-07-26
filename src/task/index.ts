@@ -6,13 +6,15 @@ import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
 import type { PathfindingPosition } from '../types';
 
 export class PathfindingTask {
-  readonly from: PathfindingPosition;
+  public readonly from: PathfindingPosition;
 
-  readonly to: PathfindingPosition;
+  public readonly to: PathfindingPosition;
 
-  readonly id: number;
+  public readonly id: number;
 
-  readonly layer: string;
+  public readonly diagonals: boolean;
+
+  public readonly layer: string;
 
   private tree: PathfindingNode[][] = [];
 
@@ -20,11 +22,15 @@ export class PathfindingTask {
 
   public readonly complete: (result: PathfindingTaskResult) => void;
 
-  constructor({ idTask, from, to, layer }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void) {
+  constructor(
+    { idTask, from, to, layer, diagonals = true }: PathfindingTaskConfig,
+    onComplete: (result: PathfindingTaskResult) => void,
+  ) {
     this.id = idTask;
     this.from = { ...from };
     this.to = { ...to };
     this.layer = layer;
+    this.diagonals = diagonals;
     this.complete = onComplete;
 
     this.nodes = new Heap<PathfindingNode>(

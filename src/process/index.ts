@@ -137,14 +137,16 @@ export class PathfindingProcess {
       },
     );
 
-    Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL).forEach(
-      ([key, direction]) => {
-        const clear = straightClear[key[0]] && straightClear[key[1]];
-        if (clear && this.isWalkable(node, task.layer, direction)) {
-          allowedDirs.push(direction);
-        }
-      },
-    );
+    if (task.diagonals) {
+      Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL).forEach(
+        ([key, direction]) => {
+          const clear = straightClear[key[0]] && straightClear[key[1]];
+          if (clear && this.isWalkable(node, task.layer, direction)) {
+            allowedDirs.push(direction);
+          }
+        },
+      );
+    }
 
     return allowedDirs;
   }

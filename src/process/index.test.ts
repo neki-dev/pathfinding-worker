@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads';
 
-import { mockedPath } from './__mocks__/path';
+import { mockedPath, mockedStraightPath } from './__mocks__/path';
 import { mockGrid } from '../__mocks__/grid';
 import { PathfindingTask } from '../task';
 
@@ -23,7 +23,7 @@ describe('PathfindingProcess', () => {
     parentPort?.postMessage.mockClear();
   });
 
-  it('should complete task with path', () => {
+  it('should complete task', () => {
     const callback = jest.fn();
     const task = new PathfindingTask({
       idTask: 1,
@@ -39,6 +39,26 @@ describe('PathfindingProcess', () => {
     expect(callback).toHaveBeenCalledWith({
       weight: 6,
       path: mockedPath,
+    });
+  });
+
+  it('should complete task with straight directions', () => {
+    const callback = jest.fn();
+    const task = new PathfindingTask({
+      idTask: 1,
+      from: { x: 6, y: 16 },
+      to: { x: 7, y: 22 },
+      layer: 'layer1',
+      diagonals: false,
+    }, callback);
+
+    process.createTask(task);
+    // @ts-ignore: Emitate remote call
+    process.next();
+
+    expect(callback).toHaveBeenCalledWith({
+      weight: 7,
+      path: mockedStraightPath,
     });
   });
 

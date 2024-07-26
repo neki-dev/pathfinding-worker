@@ -92,11 +92,12 @@ const idTask = pathfinder.createTask(
 ```
 * `config` - _Task configuration_
  
-| Prop | Description |
-| ---- | ----------- |
-| layer | Layer of grid |
-| from | Begin tile position |
-| to | End tile position |
+| Prop | Description | Default |
+| ---- | ----------- | ------- |
+| layer | Layer of grid | |
+| from | Begin tile position | |
+| to | End tile position | |
+| diagonals | Allow diagonal directions | true |
 
 * `callback` - _Callback with result_
 
