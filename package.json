@@ -1,7 +1,7 @@
 {
   "name": "pathfinding-worker",
   "description": "Fast node.js pathfinding on workers for grid-based games",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "keywords": [
     "astar",
     "dijkstra",
@@ -46,8 +46,7 @@
     "typescript": "5.5.3",
     "typescript-eslint": "7.16.1",
     "webpack": "5.93.0",
-    "webpack-cli": "5.1.4",
-    "wrapper-webpack-plugin": "^2.2.2"
+    "webpack-cli": "5.1.4"
   },
   "repository": {
     "type": "git",

@@ -1,3 +1,4 @@
+import type { ResourceLimits } from 'worker_threads';
 export type PathfindingConfig = {
     /**
      * Finding process loop rate
@@ -14,6 +15,10 @@ export type PathfindingConfig = {
      * Default: true
      */
     runtime?: boolean;
+    /**
+     * Worker resource limits
+     */
+    resourceLimits?: ResourceLimits;
 };
 export type PathfindingTaskConfig = {
     /**
@@ -28,6 +33,10 @@ export type PathfindingTaskConfig = {
      * End tile position
      */
     to: PathfindingPosition;
+    /**
+     * Allow diagonal directions
+     */
+    diagonals?: boolean;
 };
 export type PathfindingPosition = {
     x: number;

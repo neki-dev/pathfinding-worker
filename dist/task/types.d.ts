@@ -4,6 +4,7 @@ export type PathfindingTaskConfig = {
     from: PathfindingPosition;
     to: PathfindingPosition;
     layer: string;
+    diagonals?: boolean;
 };
 export type PathfindingTaskResult = {
     path: PathfindingPosition[] | null;

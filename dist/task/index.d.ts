@@ -5,11 +5,12 @@ export declare class PathfindingTask {
     readonly from: PathfindingPosition;
     readonly to: PathfindingPosition;
     readonly id: number;
+    readonly diagonals: boolean;
     readonly layer: string;
     private tree;
     private nodes;
     readonly complete: (result: PathfindingTaskResult) => void;
-    constructor({ idTask, from, to, layer }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void);
+    constructor({ idTask, from, to, layer, diagonals }: PathfindingTaskConfig, onComplete: (result: PathfindingTaskResult) => void);
     private getDistanceFrom;
     addNode(parent: PathfindingNode, position: PathfindingPosition, weight: number): void;
     private pushNode;
