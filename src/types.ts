@@ -44,7 +44,7 @@ export type PathfindingTaskConfig = {
   /**
    * Allow diagonal directions
    */
-  diagonals: boolean;
+  diagonals?: boolean;
 };
 
 export type PathfindingPosition = {
