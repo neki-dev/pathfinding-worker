@@ -30,6 +30,7 @@ export class Pathfinding {
     runtime = true,
     workerPath = PATHFINDING_DEFUALT_WORKER_FILE_NAME,
     loopRate,
+    resourceLimits,
   }: PathfindingConfig = {}) {
     const pr = new PathfindingRuntime(workerPath);
     if (runtime && !pr.workerExists()) {
@@ -37,7 +38,9 @@ export class Pathfinding {
     }
 
     this.worker = new Worker(pr.workerPath, {
+      name: 'pathfinding',
       workerData: { loopRate },
+      resourceLimits,
     });
 
     this.events = new PathfindingEvents(this.worker);
