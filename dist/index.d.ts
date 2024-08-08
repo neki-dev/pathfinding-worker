@@ -23,7 +23,7 @@ export declare class Pathfinding {
      */
     createLayer(grid: PathfindingGrid): PathfindingLayer;
     /**
-     * Remove exists layer of grid.
+     * Remove layer of grid.
      *
      * @param id - Layer id
      */

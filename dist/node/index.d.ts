@@ -6,7 +6,7 @@ export declare class PathfindingNode {
     readonly distance: number;
     private parent;
     private weight;
-    constructor({ position, weight, distance, }: PathfindingNodeConfig);
+    constructor({ position, distance, weight, }: PathfindingNodeConfig);
     getBetterGuessDistance(): number;
     getWeight(): number;
     setWeight(weight: number): void;

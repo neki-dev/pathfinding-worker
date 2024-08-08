@@ -42,12 +42,13 @@ export class Pathfinding {
     this.events.on(PathfindingEvent.CompleteTask, ({ idLayer, idTask, result }) => {
       const layer = this.layers.get(idLayer);
       if (!layer) {
+        // Layer was deleted before the task was completed.
         return;
       }
 
       const callback = layer.handlers.get(idTask);
       if (!callback) {
-        // Events occurs for canceled tasks, since the path calculation occurs sequentially in single process.
+        // The task was canceled.
         // Need to figure out how to interrupt the calculation for a canceled task.
         return;
       }
@@ -82,7 +83,7 @@ export class Pathfinding {
   }
 
   /**
-   * Remove exists layer of grid.
+   * Remove layer of grid.
    *
    * @param id - Layer id
    */

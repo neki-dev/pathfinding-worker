@@ -1,3 +1,5 @@
+import { PATHFINDING_DEFAULT_TILE_WEIGHT } from '../layer/const';
+
 import type { PathfindingNodeConfig } from './types';
 import type { PathfindingTaskResult } from '../task/types';
 import type { PathfindingPosition } from '../types';
@@ -13,8 +15,8 @@ export class PathfindingNode {
 
   constructor({
     position,
-    weight = 1.0,
     distance,
+    weight = PATHFINDING_DEFAULT_TILE_WEIGHT,
   }: PathfindingNodeConfig) {
     this.position = { ...position };
     this.distance = distance;
@@ -62,7 +64,7 @@ export class PathfindingNode {
       x: this.position.x + shift.x,
       y: this.position.y + shift.y,
     };
-    const weight = weights[nextPosition.y]?.[nextPosition.x] ?? 1.0;
+    const weight = weights[nextPosition.y]?.[nextPosition.x] ?? PATHFINDING_DEFAULT_TILE_WEIGHT;
 
     if (Math.abs(shift.x) + Math.abs(shift.y) !== 1) {
       return (

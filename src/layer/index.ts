@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
+import { PATHFINDING_DEFAULT_TILE_WEIGHT } from './const';
 import { PathfindingEvent } from '../events/types';
 
 import type { Pathfinding } from '..';
@@ -112,7 +113,7 @@ export class PathfindingLayer {
    * @param position - Tile position
    */
   public getWeight(position: PathfindingPosition): number {
-    return this.weights[position.y]?.[position.x] ?? 1.0;
+    return this.weights[position.y]?.[position.x] ?? PATHFINDING_DEFAULT_TILE_WEIGHT;
   }
 
   /**

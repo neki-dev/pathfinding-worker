@@ -1,0 +1,1 @@
+export const PATHFINDING_DEFAULT_TILE_WEIGHT = 1.0;
