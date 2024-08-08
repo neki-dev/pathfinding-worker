@@ -27,11 +27,6 @@ export type PathfindingConfig = {
 
 export type PathfindingTaskConfig = {
   /**
-   * Layer of grid
-   */
-  layer: string;
-
-  /**
    * Begin tile position
    */
   from: PathfindingPosition;

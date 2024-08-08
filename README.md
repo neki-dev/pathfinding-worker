@@ -54,31 +54,18 @@ pathfinding.destroy()
 
 ## Layers
 
-### ⚡️ Add new layer of grid
+### ⚡️ Create a new layer of grid
 ```ts
-pathfinding.addLayer(
-  name: string, 
+const layer = pathfinding.createLayer(
   grid: PathfindingGrid,
 )
 ```
-* `name` - _Layer name_
 * `grid` - _Grid with walkable tiles_
-
-### ⚡️ Get layer of grid
-```ts
-const layer = pathfinding.getLayer(
-  name: string, 
-)
-```
-* `name` - _Layer name_
 
 ### ⚡️ Remove exist layer of grid
 ```ts
-pathfinding.removeLayer(
-  name: string, 
-)
+layer.remove()
 ```
-* `name` - _Layer name_
 
 .
 
@@ -86,7 +73,7 @@ pathfinding.removeLayer(
 
 ### ⚡️ Create pathfinder task
 ```ts
-const idTask = pathfinder.createTask(
+const idTask = layer.findPath(
   config: PathfindingTaskConfig,
   callback: PathfindingTaskCallback,
 )
@@ -95,7 +82,6 @@ const idTask = pathfinder.createTask(
  
 | Prop | Description | Default |
 | ---- | ----------- | ------- |
-| layer | Layer of grid | |
 | from | Begin tile position | |
 | to | End tile position | |
 | diagonals | Allow diagonal directions | true |
@@ -104,7 +90,7 @@ const idTask = pathfinder.createTask(
 
 ### ⚡️ Cancel pathfinder task
 ```ts
-pathfinder.cancelTask(id: number)
+layer.cancel(id: number)
 ```
 * `id` - _Task id_
 
@@ -114,24 +100,20 @@ pathfinder.cancelTask(id: number)
 
 ### ⚡️ Set walkable state
 ```ts
-pathfinder.setWalkable(
-  layer: string,
+layer.setWalkable(
   position: PathfindingPosition,
   value: number,
 )
 ```
-* `layer` - _Layer of grid_
 * `position` - _Tile position_
 * `state` - _Walkable state_
 
 ### ⚡️ Get walkable state
 ```ts
 const walkable = pathfinder.isWalkable(
-  layer: string,
   position: PathfindingPosition,
 )
 ```
-* `layer` - _Layer of grid_
 * `position` - _Tile position_
 
 .
@@ -140,7 +122,7 @@ const walkable = pathfinder.isWalkable(
 
 ### ⚡️ Set weight
 ```ts
-pathfinder.setWeight(
+layer.setWeight(
   position: PathfindingPosition,
   value: number,
 )
@@ -150,7 +132,7 @@ pathfinder.setWeight(
 
 ### ⚡️ Reset weight
 ```ts
-pathfinder.resetWeight(
+layer.resetWeight(
   position: PathfindingPosition,
 )
 ```
@@ -158,7 +140,7 @@ pathfinder.resetWeight(
 
 ### ⚡️ Get weight
 ```ts
-const weight = pathfinder.getWeight(
+const weight = layer.getWeight(
   position: PathfindingPosition,
 )
 ```
@@ -173,15 +155,14 @@ const pathfinding = new Pathfinding({
   loopRate: 500,
 });
 
-pathfinding.addLayer('basic', [
+const layer = pathfinding.createLayer([
   [true, true,  true,  true],
   [true, true,  false, true],
   [true, false, false, true],
   [true, false, false, false],
 ]);
 
-pathfinder.createTask({
-  layer: 'basic',
+layer.findPath({
   from: { x: 0, y: 0 },
   to: { x: 3, y: 2 },
 }, ({ path, cost }) => {

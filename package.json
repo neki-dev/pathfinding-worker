@@ -1,7 +1,7 @@
 {
   "name": "pathfinding-worker",
   "description": "Fast node.js pathfinding on workers for grid-based games",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "keywords": [
     "astar",
     "dijkstra",
@@ -30,12 +30,14 @@
     "lint": "eslint \"./src/**/*.ts\" --fix"
   },
   "dependencies": {
-    "heap": "0.2.7"
+    "heap": "0.2.7",
+    "uuid": "10.0.0"
   },
   "devDependencies": {
     "@types/heap": "0.2.34",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.11",
+    "@types/uuid": "10.0.0",
     "@typescript-eslint/eslint-plugin": "7.16.1",
     "@typescript-eslint/parser": "7.16.1",
     "eslint": "8.56.0",

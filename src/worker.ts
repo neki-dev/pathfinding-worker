@@ -15,6 +15,7 @@ const process = new PathfindingProcess(workerData.loopRate);
 events.on(PathfindingEvent.CreateTask, (payload) => {
   const task = new PathfindingTask(payload, (result) => {
     events.send(PathfindingEvent.CompleteTask, {
+      idLayer: payload.idLayer,
       idTask: payload.idTask,
       result,
     });
@@ -24,25 +25,25 @@ events.on(PathfindingEvent.CreateTask, (payload) => {
 });
 
 events.on(PathfindingEvent.CancelTask, (payload) => {
-  process.cancelTask(payload.idTask);
+  process.cancelTask(payload.idLayer, payload.idTask);
 });
 
 events.on(PathfindingEvent.SetWeight, (payload) => {
   if (payload.value === null) {
-    process.resetWeight(payload.position);
+    process.resetWeight(payload.idLayer, payload.position);
   } else {
-    process.setWeight(payload.position, payload.value);
+    process.setWeight(payload.idLayer, payload.position, payload.value);
   }
 });
 
 events.on(PathfindingEvent.SetWalkable, (payload) => {
-  process.setWalkable(payload.layer, payload.position, payload.state);
+  process.setWalkable(payload.idLayer, payload.position, payload.state);
 });
 
 events.on(PathfindingEvent.AddLayer, (payload) => {
-  process.addLayer(payload.layer, payload.grid);
+  process.addLayer(payload.idLayer, payload.grid);
 });
 
 events.on(PathfindingEvent.RemoveLayer, (payload) => {
-  process.removeLayer(payload.layer);
+  process.removeLayer(payload.idLayer);
 });

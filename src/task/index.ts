@@ -14,7 +14,7 @@ export class PathfindingTask {
 
   public readonly diagonals: boolean;
 
-  public readonly layer: string;
+  public readonly idLayer: string;
 
   private tree: PathfindingNode[][] = [];
 
@@ -23,13 +23,13 @@ export class PathfindingTask {
   public readonly complete: (result: PathfindingTaskResult) => void;
 
   constructor(
-    { idTask, from, to, layer, diagonals = true }: PathfindingTaskConfig,
+    { idTask, from, to, idLayer, diagonals = true }: PathfindingTaskConfig,
     onComplete: (result: PathfindingTaskResult) => void,
   ) {
     this.id = idTask;
     this.from = { ...from };
     this.to = { ...to };
-    this.layer = layer;
+    this.idLayer = idLayer;
     this.diagonals = diagonals;
     this.complete = onComplete;
 

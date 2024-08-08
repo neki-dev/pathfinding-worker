@@ -2,9 +2,9 @@ import type { PathfindingPosition } from '../types';
 
 export type PathfindingTaskConfig = {
   idTask: number;
+  idLayer: string;
   from: PathfindingPosition;
   to: PathfindingPosition;
-  layer: string;
   diagonals?: boolean;
 };
 

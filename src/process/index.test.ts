@@ -26,10 +26,10 @@ describe('PathfindingProcess', () => {
   it('should complete task', () => {
     const callback = jest.fn();
     const task = new PathfindingTask({
+      idLayer: 'layer1',
       idTask: 1,
       from: { x: 6, y: 16 },
       to: { x: 7, y: 22 },
-      layer: 'layer1',
     }, callback);
 
     process.createTask(task);
@@ -45,10 +45,10 @@ describe('PathfindingProcess', () => {
   it('should complete task with straight directions', () => {
     const callback = jest.fn();
     const task = new PathfindingTask({
+      idLayer: 'layer1',
       idTask: 1,
       from: { x: 6, y: 16 },
       to: { x: 7, y: 22 },
-      layer: 'layer1',
       diagonals: false,
     }, callback);
 
@@ -65,10 +65,10 @@ describe('PathfindingProcess', () => {
   it('should complete task without path', () => {
     const callback = jest.fn();
     const task = new PathfindingTask({
+      idLayer: 'layer1',
       idTask: 1,
       from: { x: 0, y: 0 },
       to: { x: 99, y: 99 },
-      layer: 'layer1',
     }, callback);
 
     process.createTask(task);

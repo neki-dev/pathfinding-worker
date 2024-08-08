@@ -9,9 +9,9 @@ import type { PathfindingTask } from '../task';
 import type { PathfindingGrid, PathfindingPosition } from '../types';
 
 export class PathfindingProcess {
-  private layers: Record<string, PathfindingGrid> = {};
+  private readonly grids: Map<string, PathfindingGrid> = new Map();
 
-  private weights: number[][] = [];
+  private readonly weights: Map<string, number[][]> = new Map();
 
   private taskQueue: PathfindingTask[] = [];
 
@@ -35,38 +35,49 @@ export class PathfindingProcess {
     this.taskQueue.push(task);
   }
 
-  public cancelTask(idTask: number): void {
-    const taskIndex = this.taskQueue.findIndex((task) => task.id === idTask);
+  public cancelTask(idLayer: string, idTask: number): void {
+    const taskIndex = this.taskQueue.findIndex((task) => (
+      task.idLayer === idLayer
+      && task.id === idTask
+    ));
     if (taskIndex !== -1) {
       this.taskQueue.splice(taskIndex, 1);
     }
   }
 
-  public addLayer(layer: string, grid: PathfindingGrid): void {
-    this.layers[layer] = grid;
+  public addLayer(idLayer: string, grid: PathfindingGrid): void {
+    this.grids.set(idLayer, grid);
   }
 
-  public removeLayer(layer: string): void {
-    if (this.layers[layer]) {
-      delete this.layers[layer];
+  public removeLayer(idLayer: string): void {
+    this.grids.delete(idLayer);
+  }
+
+  public setWeight(idLayer: string, position: PathfindingPosition, value: number): void {
+    const weight = this.weights.get(idLayer);
+    if (!weight) {
+      return;
+    }
+
+    if (!weight[position.y]) {
+      weight[position.y] = [];
+    }
+    weight[position.y][position.x] = value;
+  }
+
+  public resetWeight(idLayer: string, position: PathfindingPosition): void {
+    const weight = this.weights.get(idLayer);
+    if (!weight) {
+      return;
+    }
+
+    if (weight[position.y]) {
+      delete weight[position.y][position.x];
     }
   }
 
-  public setWeight(position: PathfindingPosition, weight: number): void {
-    if (!this.weights[position.y]) {
-      this.weights[position.y] = [];
-    }
-    this.weights[position.y][position.x] = weight;
-  }
-
-  public resetWeight(position: PathfindingPosition): void {
-    if (this.weights[position.y]) {
-      delete this.weights[position.y][position.x];
-    }
-  }
-
-  public setWalkable(layer: string, position: PathfindingPosition, state: boolean) {
-    const grid = this.layers[layer];
+  public setWalkable(idLayer: string, position: PathfindingPosition, state: boolean) {
+    const grid = this.grids.get(idLayer);
     if (!grid) {
       return;
     }
@@ -94,10 +105,11 @@ export class PathfindingProcess {
             x: currentNode.position.x + offset.x,
             y: currentNode.position.y + offset.y,
           };
+          const weights = this.weights.get(task.idLayer) ?? [];
           const nextWeight = task.getNextWeight(
             currentNode,
             offset,
-            this.weights,
+            weights,
           );
           const nextNode = task.pickNode(position);
 
@@ -130,7 +142,7 @@ export class PathfindingProcess {
 
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT).forEach(
       ([key, direction]) => {
-        if (this.isWalkable(node, task.layer, direction)) {
+        if (this.isWalkable(task.idLayer, node, direction)) {
           straightClear[key] = true;
           allowedDirs.push(direction);
         }
@@ -141,7 +153,7 @@ export class PathfindingProcess {
       Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL).forEach(
         ([key, direction]) => {
           const clear = straightClear[key[0]] && straightClear[key[1]];
-          if (clear && this.isWalkable(node, task.layer, direction)) {
+          if (clear && this.isWalkable(task.idLayer, node, direction)) {
             allowedDirs.push(direction);
           }
         },
@@ -151,11 +163,16 @@ export class PathfindingProcess {
     return allowedDirs;
   }
 
-  private isWalkable(node: PathfindingNode, layer: string, direction: PathfindingPosition) {
+  private isWalkable(idLayer: string, node: PathfindingNode, direction: PathfindingPosition) {
+    const grid = this.grids.get(idLayer);
+    if (!grid) {
+      return false;
+    }
+
     const position = {
       x: node.position.x + direction.x,
       y: node.position.y + direction.y,
     };
-    return Boolean(this.layers[layer]?.[position.y]?.[position.x]);
+    return Boolean(grid[position.y]?.[position.x]);
   }
 }

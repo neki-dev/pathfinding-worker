@@ -13,33 +13,36 @@ export enum PathfindingEvent {
 
 export type PathfindingEventPayload = {
   [PathfindingEvent.CreateTask]: {
+    idLayer: string;
     idTask: number;
     from: PathfindingPosition;
     to: PathfindingPosition;
-    layer: string;
   };
   [PathfindingEvent.CancelTask]: {
+    idLayer: string;
     idTask: number;
   };
   [PathfindingEvent.SetWeight]: {
+    idLayer: string;
     position: PathfindingPosition;
     value: number | null;
   };
   [PathfindingEvent.SetWalkable]: {
+    idLayer: string;
     position: PathfindingPosition;
     state: boolean;
-    layer: string;
   };
   [PathfindingEvent.CompleteTask]: {
+    idLayer: string;
     idTask: number;
     result: PathfindingTaskResult;
   };
   [PathfindingEvent.AddLayer]: {
-    layer: string;
+    idLayer: string;
     grid: PathfindingGrid;
   };
   [PathfindingEvent.RemoveLayer]: {
-    layer: string;
+    idLayer: string;
   };
 };
 
