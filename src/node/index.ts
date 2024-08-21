@@ -60,17 +60,15 @@ export class PathfindingNode {
   }
 
   public getNextWeight(shift: PathfindingPosition, weights: number[][]): number {
-    const nextPosition = {
-      x: this.position.x + shift.x,
-      y: this.position.y + shift.y,
-    };
-    const weight = weights[nextPosition.y]?.[nextPosition.x] ?? PATHFINDING_DEFAULT_TILE_WEIGHT;
+    const x = this.position.x + shift.x;
+    const y = this.position.y + shift.y;
+    const weight = weights[y]?.[x] ?? PATHFINDING_DEFAULT_TILE_WEIGHT;
 
     if (Math.abs(shift.x) + Math.abs(shift.y) !== 1) {
       return (
         weight * Math.SQRT2 +
-        (weights[this.position.y]?.[nextPosition.x] ?? 0.0) +
-        (weights[nextPosition.y]?.[this.position.x] ?? 0.0)
+        (weights[this.position.y]?.[x] ?? 0.0) +
+        (weights[y]?.[this.position.x] ?? 0.0)
       );
     }
 

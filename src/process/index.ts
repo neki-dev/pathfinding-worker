@@ -13,7 +13,7 @@ export class PathfindingProcess {
 
   private readonly weights: Map<string, number[][]> = new Map();
 
-  private taskQueue: PathfindingTask[] = [];
+  private queue: PathfindingTask[] = [];
 
   private timer: NodeJS.Timeout;
 
@@ -32,16 +32,15 @@ export class PathfindingProcess {
   }
 
   public createTask(task: PathfindingTask): void {
-    this.taskQueue.push(task);
+    this.queue.push(task);
   }
 
   public cancelTask(idLayer: string, idTask: number): void {
-    const taskIndex = this.taskQueue.findIndex((task) => (
-      task.idLayer === idLayer
-      && task.id === idTask
-    ));
+    const taskIndex = this.queue.findIndex(
+      (task) => task.idLayer === idLayer && task.id === idTask,
+    );
     if (taskIndex !== -1) {
-      this.taskQueue.splice(taskIndex, 1);
+      this.queue.splice(taskIndex, 1);
     }
   }
 
@@ -53,30 +52,33 @@ export class PathfindingProcess {
     this.grids.delete(idLayer);
   }
 
-  public setWeight(idLayer: string, position: PathfindingPosition, value: number): void {
+  public setWeight(
+    idLayer: string,
+    position: PathfindingPosition,
+    value: number | null,
+  ): void {
     const weight = this.weights.get(idLayer);
     if (!weight) {
       return;
     }
 
-    if (!weight[position.y]) {
-      weight[position.y] = [];
-    }
-    weight[position.y][position.x] = value;
-  }
-
-  public resetWeight(idLayer: string, position: PathfindingPosition): void {
-    const weight = this.weights.get(idLayer);
-    if (!weight) {
-      return;
-    }
-
-    if (weight[position.y]) {
-      delete weight[position.y][position.x];
+    if (value === null) {
+      if (weight[position.y]) {
+        delete weight[position.y][position.x];
+      }
+    } else {
+      if (!weight[position.y]) {
+        weight[position.y] = [];
+      }
+      weight[position.y][position.x] = value;
     }
   }
 
-  public setWalkable(idLayer: string, position: PathfindingPosition, state: boolean) {
+  public setWalkable(
+    idLayer: string,
+    position: PathfindingPosition,
+    state: boolean,
+  ) {
     const grid = this.grids.get(idLayer);
     if (!grid) {
       return;
@@ -86,7 +88,7 @@ export class PathfindingProcess {
   }
 
   private next(): void {
-    const task = this.taskQueue[0];
+    const task = this.queue[0];
     if (!task) {
       return;
     }
@@ -97,7 +99,7 @@ export class PathfindingProcess {
         currentNode.position.x === task.to.x &&
         currentNode.position.y === task.to.y
       ) {
-        this.taskQueue.shift();
+        this.queue.shift();
         task.complete(currentNode.compute());
       } else {
         this.getNextDirections(task, currentNode).forEach((offset) => {
@@ -106,11 +108,7 @@ export class PathfindingProcess {
             y: currentNode.position.y + offset.y,
           };
           const weights = this.weights.get(task.idLayer) ?? [];
-          const nextWeight = task.getNextWeight(
-            currentNode,
-            offset,
-            weights,
-          );
+          const nextWeight = task.getNextWeight(currentNode, offset, weights);
           const nextNode = task.pickNode(position);
 
           if (nextNode) {
@@ -123,7 +121,7 @@ export class PathfindingProcess {
         });
       }
     } else {
-      this.taskQueue.shift();
+      this.queue.shift();
       task.complete({
         path: null,
         weight: Infinity,
@@ -137,14 +135,14 @@ export class PathfindingProcess {
     task: PathfindingTask,
     node: PathfindingNode,
   ): PathfindingPosition[] {
-    const straightClear: Record<string, boolean> = {};
-    const allowedDirs: PathfindingPosition[] = [];
+    const directions: PathfindingPosition[] = [];
+    const clears: Set<string> = new Set();
 
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT).forEach(
       ([key, direction]) => {
         if (this.isWalkable(task.idLayer, node, direction)) {
-          straightClear[key] = true;
-          allowedDirs.push(direction);
+          clears.add(key);
+          directions.push(direction);
         }
       },
     );
@@ -152,27 +150,30 @@ export class PathfindingProcess {
     if (task.diagonals) {
       Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL).forEach(
         ([key, direction]) => {
-          const clear = straightClear[key[0]] && straightClear[key[1]];
+          const clear = clears.has(key[0]) && clears.has(key[1]);
           if (clear && this.isWalkable(task.idLayer, node, direction)) {
-            allowedDirs.push(direction);
+            directions.push(direction);
           }
         },
       );
     }
 
-    return allowedDirs;
+    return directions;
   }
 
-  private isWalkable(idLayer: string, node: PathfindingNode, direction: PathfindingPosition) {
+  private isWalkable(
+    idLayer: string,
+    node: PathfindingNode,
+    direction: PathfindingPosition,
+  ) {
     const grid = this.grids.get(idLayer);
     if (!grid) {
       return false;
     }
 
-    const position = {
-      x: node.position.x + direction.x,
-      y: node.position.y + direction.y,
-    };
-    return Boolean(grid[position.y]?.[position.x]);
+    const y = node.position.y + direction.y;
+    const x = node.position.x + direction.x;
+
+    return Boolean(grid[y]?.[x]);
   }
 }

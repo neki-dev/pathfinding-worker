@@ -29,11 +29,7 @@ events.on(PathfindingEvent.CancelTask, (payload) => {
 });
 
 events.on(PathfindingEvent.SetWeight, (payload) => {
-  if (payload.value === null) {
-    process.resetWeight(payload.idLayer, payload.position);
-  } else {
-    process.setWeight(payload.idLayer, payload.position, payload.value);
-  }
+  process.setWeight(payload.idLayer, payload.position, payload.value);
 });
 
 events.on(PathfindingEvent.SetWalkable, (payload) => {
