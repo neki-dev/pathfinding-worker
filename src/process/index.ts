@@ -46,10 +46,12 @@ export class PathfindingProcess {
 
   public addLayer(idLayer: string, grid: PathfindingGrid): void {
     this.grids.set(idLayer, grid);
+    this.weights.set(idLayer, []);
   }
 
   public removeLayer(idLayer: string): void {
     this.grids.delete(idLayer);
+    this.weights.delete(idLayer);
   }
 
   public setWeight(
