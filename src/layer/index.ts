@@ -44,9 +44,6 @@ export class PathfindingLayer {
       return;
     }
 
-    if (!this.grid[position.y]) {
-      this.grid[position.y] = [];
-    }
     this.grid[position.y][position.x] = state;
 
     this.pathfinding.events.send(PathfindingEvent.SetWalkable, {
@@ -94,7 +91,7 @@ export class PathfindingLayer {
    * @param position - Tile position
    */
   public resetWeight(position: PathfindingPosition): void {
-    if (this.weights[position.y]?.[position.x] === undefined) {
+    if (this.getWeight(position) === PATHFINDING_DEFAULT_TILE_WEIGHT) {
       return;
     }
 

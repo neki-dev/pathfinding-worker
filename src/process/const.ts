@@ -1,5 +1,11 @@
+/**
+ * @internal
+ */
 export const PATHFINDING_PROCESS_LOOP_RATE = 200;
 
+/**
+ * @internal
+ */
 export const PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT = {
   R: { x: 1, y: 0 }, // →
   L: { x: -1, y: 0 }, // ←
@@ -7,6 +13,9 @@ export const PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT = {
   U: { x: 0, y: -1 }, // ↑
 };
 
+/**
+ * @internal
+ */
 export const PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL = {
   RD: { x: 1, y: 1 }, // ↘
   RU: { x: 1, y: -1 }, // ↗

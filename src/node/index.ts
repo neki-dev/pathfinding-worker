@@ -4,6 +4,9 @@ import type { PathfindingNodeConfig } from './types';
 import type { PathfindingTaskResult } from '../task/types';
 import type { PathfindingPosition } from '../types';
 
+/**
+ * @internal
+ */
 export class PathfindingNode {
   readonly position: PathfindingPosition;
 

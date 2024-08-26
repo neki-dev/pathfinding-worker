@@ -1,6 +1,9 @@
 import type { PathfindingTaskResult } from '../task/types';
 import type { PathfindingGrid, PathfindingPosition } from '../types';
 
+/**
+ * @internal
+ */
 export enum PathfindingEvent {
   CreateTask = 'CreateTask',
   CompleteTask = 'CompleteTask',
@@ -11,6 +14,9 @@ export enum PathfindingEvent {
   SetWeight = 'SetWeight',
 }
 
+/**
+ * @internal
+ */
 export type PathfindingEventPayload = {
   [PathfindingEvent.CreateTask]: {
     idLayer: string;
@@ -46,11 +52,17 @@ export type PathfindingEventPayload = {
   };
 };
 
+/**
+ * @internal
+ */
 export interface PathfindingEventsParent {
   on(event: 'message', callback: (body: PathfindingEventsBody) => void): void;
   postMessage(payload: Record<string, any>): void;
 }
 
+/**
+ * @internal
+ */
 export type PathfindingEventsBody = {
   event: string;
   payload: Record<string, any>;

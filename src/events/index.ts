@@ -1,5 +1,8 @@
 import type { PathfindingEventPayload, PathfindingEventsParent } from './types';
 
+/**
+ * @internal
+ */
 export class PathfindingEvents {
   private listeners = new Map<string, (payload: any) => void>();
 

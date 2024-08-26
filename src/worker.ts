@@ -37,7 +37,7 @@ events.on(PathfindingEvent.SetWalkable, (payload) => {
 });
 
 events.on(PathfindingEvent.AddLayer, (payload) => {
-  process.addLayer(payload.idLayer, payload.grid);
+  process.createLayer(payload.idLayer, payload.grid);
 });
 
 events.on(PathfindingEvent.RemoveLayer, (payload) => {

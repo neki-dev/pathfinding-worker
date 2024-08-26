@@ -11,7 +11,7 @@ describe('PathfindingProcess', () => {
 
   beforeAll(() => {
     process = new PathfindingProcess();
-    process.addLayer('layer1', mockGrid());
+    process.createLayer('layer1', mockGrid());
   });
 
   afterAll(() => {

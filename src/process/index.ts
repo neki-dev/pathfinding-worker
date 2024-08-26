@@ -8,6 +8,9 @@ import type { PathfindingNode } from '../node';
 import type { PathfindingTask } from '../task';
 import type { PathfindingGrid, PathfindingPosition } from '../types';
 
+/**
+ * @internal
+ */
 export class PathfindingProcess {
   private readonly grids: Map<string, PathfindingGrid> = new Map();
 
@@ -44,7 +47,7 @@ export class PathfindingProcess {
     }
   }
 
-  public addLayer(idLayer: string, grid: PathfindingGrid): void {
+  public createLayer(idLayer: string, grid: PathfindingGrid): void {
     this.grids.set(idLayer, grid);
     this.weights.set(idLayer, []);
   }
