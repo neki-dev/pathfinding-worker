@@ -11,15 +11,16 @@ export type PathfindingTaskConfig = {
   diagonals?: boolean;
 };
 
-/**
- * @internal
- */
 export type PathfindingTaskResult = {
+  /**
+   * Path result
+   */
   path: PathfindingPosition[] | null;
+
+  /**
+   * Total path weight
+   */
   weight: number;
 };
 
-/**
- * @internal
- */
 export type PathfindingTaskCallback = (result: PathfindingTaskResult) => void;
