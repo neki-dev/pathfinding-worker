@@ -8,18 +8,6 @@ export type PathfindingConfig = {
   loopRate?: number;
 
   /**
-   * Path to worker file
-   * Default: ./pathfinder.worker.js
-   */
-  workerPath?: string;
-
-  /**
-   * Create worker script in runtime mode
-   * Default: true
-   */
-  runtime?: boolean;
-
-  /**
    * Worker resource limits
    */
   resourceLimits?: ResourceLimits;

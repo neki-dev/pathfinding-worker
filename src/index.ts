@@ -1,10 +1,10 @@
 import { Worker } from 'worker_threads';
 
-import { PATHFINDING_DEFUALT_WORKER_FILE_NAME } from './const';
 import { PathfindingEvents } from './events';
 import { PathfindingEvent } from './events/types';
 import { PathfindingLayer } from './layer';
-import { PathfindingRuntime } from './runtime';
+// Import pre-builded inline worker as string
+import INLINE_WORKER from '../.tmp/worker.inline.js';
 
 import type { PathfindingGrid, PathfindingConfig } from './types';
 
@@ -21,18 +21,12 @@ export class Pathfinding {
    * @param config - Pathfinding configuration
    */
   constructor({
-    runtime = true,
-    workerPath = PATHFINDING_DEFUALT_WORKER_FILE_NAME,
     loopRate,
     resourceLimits,
   }: PathfindingConfig = {}) {
-    const pr = new PathfindingRuntime(workerPath);
-    if (runtime && !pr.workerExists()) {
-      pr.createWorker();
-    }
-
-    this.worker = new Worker(pr.workerPath, {
+    this.worker = new Worker(INLINE_WORKER, {
       name: 'pathfinding',
+      eval: true,
       workerData: { loopRate },
       resourceLimits,
     });
