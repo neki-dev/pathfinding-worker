@@ -1,8 +1,5 @@
 import type { ResourceLimits } from 'worker_threads';
 
-export * from './task/types';
-export * from './layer';
-
 export type PathfindingConfig = {
   /**
    * Finding process loop rate
@@ -33,9 +30,15 @@ export type PathfindingTaskConfig = {
   diagonals?: boolean;
 };
 
+/**
+ * Grid cell position
+ */
 export type PathfindingPosition = {
   x: number;
   y: number;
 };
 
+/**
+ * Grid
+ */
 export type PathfindingGrid = boolean[][];

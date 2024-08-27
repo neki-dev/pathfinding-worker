@@ -3,10 +3,10 @@ import { Worker } from 'worker_threads';
 import { PathfindingEvents } from './events';
 import { PathfindingEvent } from './events/types';
 import { PathfindingLayer } from './layer';
-// Import pre-builded inline worker as string
 import INLINE_WORKER from '../.tmp/worker.inline.js';
 
-import type { PathfindingGrid, PathfindingConfig } from './types';
+import type { PathfindingTaskCallback, PathfindingTaskResult } from './task/types';
+import type { PathfindingGrid, PathfindingConfig, PathfindingPosition } from './types';
 
 export class Pathfinding {
   public readonly worker: Worker;
@@ -93,3 +93,11 @@ export class Pathfinding {
     });
   }
 }
+
+export type {
+  PathfindingGrid,
+  PathfindingPosition,
+  PathfindingLayer,
+  PathfindingTaskCallback,
+  PathfindingTaskResult,
+};

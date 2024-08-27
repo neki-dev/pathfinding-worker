@@ -11,9 +11,13 @@ export type PathfindingTaskConfig = {
   diagonals?: boolean;
 };
 
+/**
+ * Task result
+ */
 export type PathfindingTaskResult = {
   /**
-   * Path result
+   * Path from starting cell to ending cell
+   * Will be null if path is not found
    */
   path: PathfindingPosition[] | null;
 

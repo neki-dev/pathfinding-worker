@@ -1,7 +1,8 @@
 import { Worker } from 'worker_threads';
 import { PathfindingEvents } from './events';
 import { PathfindingLayer } from './layer';
-import type { PathfindingGrid, PathfindingConfig } from './types';
+import type { PathfindingTaskCallback, PathfindingTaskResult } from './task/types';
+import type { PathfindingGrid, PathfindingConfig, PathfindingPosition } from './types';
 export declare class Pathfinding {
     readonly worker: Worker;
     readonly events: PathfindingEvents;
@@ -29,3 +30,4 @@ export declare class Pathfinding {
      */
     removeLayer(id: string): void;
 }
+export type { PathfindingGrid, PathfindingPosition, PathfindingLayer, PathfindingTaskCallback, PathfindingTaskResult, };
