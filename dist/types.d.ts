@@ -1,5 +1,6 @@
 import type { ResourceLimits } from 'worker_threads';
 export * from './task/types';
+export * from './layer';
 export type PathfindingConfig = {
     /**
      * Finding process loop rate
