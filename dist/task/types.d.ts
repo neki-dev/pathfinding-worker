@@ -9,4 +9,7 @@ export type PathfindingTaskResult = {
      */
     weight: number;
 };
+/**
+ * Callback with task result
+ */
 export type PathfindingTaskCallback = (result: PathfindingTaskResult) => void;
