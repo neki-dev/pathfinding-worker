@@ -1,6 +1,6 @@
 import type { Pathfinding } from '..';
 import type { PathfindingTaskCallback } from '../task/types';
-import type { PathfindingGrid, PathfindingPosition, PathfindingTaskConfig } from '../types';
+import type { PathfindingGrid, PathfindingPoint, PathfindingTaskConfig } from '../types';
 export declare class PathfindingLayer {
     readonly uuid: string;
     private readonly pathfinding;
@@ -19,32 +19,32 @@ export declare class PathfindingLayer {
      * @param position - Tile position
      * @param state - Walkable state
      */
-    setWalkable(position: PathfindingPosition, state: boolean): void;
+    setWalkable(position: PathfindingPoint, state: boolean): void;
     /**
      * Get walkable state of tile.
      *
      * @param position - Tile position
      */
-    isWalkable(position: PathfindingPosition): boolean;
+    isWalkable(position: PathfindingPoint): boolean;
     /**
      * Update tile weight.
      *
      * @param position - Tile position
      * @param value - New weight
      */
-    setWeight(position: PathfindingPosition, value: number): void;
+    setWeight(position: PathfindingPoint, value: number): void;
     /**
      * Set tile weight to default value.
      *
      * @param position - Tile position
      */
-    resetWeight(position: PathfindingPosition): void;
+    resetWeight(position: PathfindingPoint): void;
     /**
      * Get tile weight.
      *
      * @param position - Tile position
      */
-    getWeight(position: PathfindingPosition): number;
+    getWeight(position: PathfindingPoint): number;
     /**
      * Create a new task to find path between two tiles.
      *
@@ -60,4 +60,5 @@ export declare class PathfindingLayer {
      * @param id - Task id
      */
     cancel(id: number): void;
+    private isPointValid;
 }

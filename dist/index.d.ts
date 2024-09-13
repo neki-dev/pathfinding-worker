@@ -2,7 +2,7 @@ import { Worker } from 'worker_threads';
 import { PathfindingEvents } from './events';
 import { PathfindingLayer } from './layer';
 import type { PathfindingTaskCallback, PathfindingTaskResult } from './task/types';
-import type { PathfindingGrid, PathfindingConfig, PathfindingPosition } from './types';
+import type { PathfindingGrid, PathfindingConfig, PathfindingPoint } from './types';
 export declare class Pathfinding {
     readonly worker: Worker;
     readonly events: PathfindingEvents;
@@ -12,7 +12,7 @@ export declare class Pathfinding {
      *
      * @param config - Pathfinding configuration
      */
-    constructor({ loopRate, resourceLimits, }?: PathfindingConfig);
+    constructor({ loopRate, resourceLimits }?: PathfindingConfig);
     /**
      * Terminate worker thread.
      */
@@ -24,10 +24,17 @@ export declare class Pathfinding {
      */
     createLayer(grid: PathfindingGrid): PathfindingLayer;
     /**
+     * Check for layer presence.
+     *
+     * @param id - Layer id
+     */
+    hasLayer(id: string): boolean;
+    /**
      * Remove layer of grid.
      *
      * @param id - Layer id
      */
     removeLayer(id: string): void;
+    private unflatPath;
 }
-export type { PathfindingGrid, PathfindingPosition, PathfindingLayer, PathfindingTaskCallback, PathfindingTaskResult, };
+export type { PathfindingGrid, PathfindingPoint, PathfindingLayer, PathfindingTaskCallback, PathfindingTaskResult, };

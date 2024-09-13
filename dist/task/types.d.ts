@@ -1,4 +1,4 @@
-import type { PathfindingPosition } from '../types';
+import type { PathfindingPoint } from '../types';
 /**
  * Task result
  */
@@ -7,7 +7,7 @@ export type PathfindingTaskResult = {
      * Path from starting cell to ending cell
      * Will be null if path is not found
      */
-    path: PathfindingPosition[] | null;
+    path: PathfindingPoint[] | null;
     /**
      * Total path weight
      */
