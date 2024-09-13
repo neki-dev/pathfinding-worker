@@ -72,6 +72,12 @@ export class Pathfinding {
    * @param grid - Grid with walkable tiles
    */
   public createLayer(grid: PathfindingGrid): PathfindingLayer {
+    for (let i = 1; i < grid.length; i++) {
+      if (grid[0].length !== grid[i].length) {
+        throw Error('Invalid grid. Different length of subarrays');
+      }
+    }
+
     const layer = new PathfindingLayer(this, grid);
     this.layers.set(layer.uuid, layer);
 
