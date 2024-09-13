@@ -3,12 +3,12 @@ import { v4 as uuid } from 'uuid';
 import { PATHFINDING_DEFAULT_TILE_WEIGHT } from './const';
 import { PathfindingEvent } from '../events/types';
 
-import type { Pathfinding } from '..';
-import type { PathfindingTaskCallback } from '../task/types';
-import type { PathfindingGrid, PathfindingPoint, PathfindingTaskConfig } from '../types';
+import type { Pathfinding } from '../pathfinding';
+import type { PathfindingTaskCallback, PathfindingTaskConfig } from '../task/types';
+import type { PathfindingGrid, PathfindingPoint } from '../types';
 
 export class PathfindingLayer {
-  public readonly uuid: string;
+  public readonly id: string;
 
   private readonly pathfinding: Pathfinding;
 
@@ -23,14 +23,14 @@ export class PathfindingLayer {
   constructor(pathfinding: Pathfinding, grid: PathfindingGrid) {
     this.pathfinding = pathfinding;
     this.grid = grid;
-    this.uuid = uuid();
+    this.id = uuid();
   }
 
   /**
    * Remove layer.
    */
   public remove(): void {
-    this.pathfinding.removeLayer(this.uuid);
+    this.pathfinding.removeLayer(this.id);
   }
 
   /**
@@ -51,7 +51,7 @@ export class PathfindingLayer {
     this.grid[position.y][position.x] = state;
 
     this.pathfinding.events.send(PathfindingEvent.SetWalkable, {
-      idLayer: this.uuid,
+      idLayer: this.id,
       position,
       state,
     });
@@ -91,7 +91,7 @@ export class PathfindingLayer {
     this.weights[position.y][position.x] = value;
 
     this.pathfinding.events.send(PathfindingEvent.SetWeight, {
-      idLayer: this.uuid,
+      idLayer: this.id,
       position,
       value,
     });
@@ -114,7 +114,7 @@ export class PathfindingLayer {
     delete this.weights[position.y][position.x];
 
     this.pathfinding.events.send(PathfindingEvent.SetWeight, {
-      idLayer: this.uuid,
+      idLayer: this.id,
       position,
       value: null,
     });
@@ -157,7 +157,7 @@ export class PathfindingLayer {
 
     this.pathfinding.events.send(PathfindingEvent.CreateTask, {
       ...config,
-      idLayer: this.uuid,
+      idLayer: this.id,
       idTask: id,
     });
 
@@ -177,7 +177,7 @@ export class PathfindingLayer {
     }
 
     this.pathfinding.events.send(PathfindingEvent.CancelTask, {
-      idLayer: this.uuid,
+      idLayer: this.id,
       idTask: id,
     });
 

@@ -1,5 +1,22 @@
 import type { PathfindingPoint } from '../types';
 /**
+ * Parameters for task create
+ */
+export type PathfindingTaskConfig = {
+    /**
+     * Begin tile position
+     */
+    from: PathfindingPoint;
+    /**
+     * End tile position
+     */
+    to: PathfindingPoint;
+    /**
+     * Allow diagonal directions
+     */
+    diagonals?: boolean;
+};
+/**
  * Task result
  */
 export type PathfindingTaskResult = {

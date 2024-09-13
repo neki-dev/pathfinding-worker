@@ -1,8 +1,8 @@
-import type { Pathfinding } from '..';
-import type { PathfindingTaskCallback } from '../task/types';
-import type { PathfindingGrid, PathfindingPoint, PathfindingTaskConfig } from '../types';
+import type { Pathfinding } from '../pathfinding';
+import type { PathfindingTaskCallback, PathfindingTaskConfig } from '../task/types';
+import type { PathfindingGrid, PathfindingPoint } from '../types';
 export declare class PathfindingLayer {
-    readonly uuid: string;
+    readonly id: string;
     private readonly pathfinding;
     private readonly grid;
     private readonly weights;

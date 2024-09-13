@@ -23,10 +23,9 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "yarn build:worker && yarn build:entrypoint && yarn clear",
+    "build": "yarn build:worker && yarn build:entrypoint",
     "build:worker": "webpack --config ./webpack/worker.config.js --mode production",
     "build:entrypoint": "webpack --config ./webpack/entrypoint.config.js --mode production",
-    "clear": "rm -R ./.tmp",
     "test": "jest",
     "lint": "eslint \"./src/**/*.ts\" --fix"
   },

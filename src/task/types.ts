@@ -1,22 +1,23 @@
 import type { PathfindingPoint } from '../types';
 
 /**
- * @internal
+ * Parameters for task create
  */
 export type PathfindingTaskConfig = {
-  idTask: number;
-  idLayer: string;
+  /**
+   * Begin tile position
+   */
   from: PathfindingPoint;
-  to: PathfindingPoint;
-  diagonals?: boolean;
-};
 
-/**
- * @internal
- */
-export type PathfindingTaskResultRaw = {
-  path: Uint8Array | null;
-  weight: number;
+  /**
+   * End tile position
+   */
+  to: PathfindingPoint;
+
+  /**
+   * Allow diagonal directions
+   */
+  diagonals?: boolean;
 };
 
 /**
@@ -39,3 +40,19 @@ export type PathfindingTaskResult = {
  * Callback with task result
  */
 export type PathfindingTaskCallback = (result: PathfindingTaskResult) => void;
+
+/**
+ * @internal
+ */
+export type PathfindingTaskFullConfig = PathfindingTaskConfig & {
+  idTask: number;
+  idLayer: string;
+};
+
+/**
+ * @internal
+ */
+export type PathfindingTaskResultRaw = {
+  path: Uint8Array | null;
+  weight: number;
+};

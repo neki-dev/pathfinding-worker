@@ -1,9 +1,9 @@
 import { parentPort, workerData } from 'worker_threads';
 
-import { PathfindingEvents } from './events';
-import { PathfindingEvent } from './events/types';
-import { PathfindingProcess } from './process';
-import { PathfindingTask } from './task';
+import { PathfindingEvents } from '../events';
+import { PathfindingEvent } from '../events/types';
+import { PathfindingProcess } from '../process';
+import { PathfindingTask } from '../task';
 
 if (!parentPort) {
   throw Error('Undefined parent port of pathfinding worker');

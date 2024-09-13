@@ -1,5 +1,5 @@
 .git
 .idea
 node_modules/
-.tmp
+.temp
 .DS_Store

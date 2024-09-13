@@ -10,5 +10,7 @@ jobs:
           node-version: '20.x'
       - name: Install
         run: yarn install
+      - name: Build
+        run: yarn build:worker
       - name: Test
         run: yarn test
