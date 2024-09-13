@@ -5,7 +5,7 @@ import { PathfindingEvent } from '../events/types';
 
 import type { Pathfinding } from '..';
 import type { PathfindingTaskCallback } from '../task/types';
-import type { PathfindingGrid, PathfindingPosition, PathfindingTaskConfig } from '../types';
+import type { PathfindingGrid, PathfindingPoint, PathfindingTaskConfig } from '../types';
 
 export class PathfindingLayer {
   public readonly uuid: string;
@@ -39,7 +39,11 @@ export class PathfindingLayer {
    * @param position - Tile position
    * @param state - Walkable state
    */
-  public setWalkable(position: PathfindingPosition, state: boolean): void {
+  public setWalkable(position: PathfindingPoint, state: boolean): void {
+    if (!this.isPointValid(position)) {
+      throw Error('Invalid position. Non-integer values');
+    }
+
     if (this.isWalkable(position) === state) {
       return;
     }
@@ -58,7 +62,11 @@ export class PathfindingLayer {
    *
    * @param position - Tile position
    */
-  public isWalkable(position: PathfindingPosition): boolean {
+  public isWalkable(position: PathfindingPoint): boolean {
+    if (!this.isPointValid(position)) {
+      throw Error('Invalid position. Non-integer values');
+    }
+
     return Boolean(this.grid[position.y]?.[position.x]);
   }
 
@@ -68,7 +76,11 @@ export class PathfindingLayer {
    * @param position - Tile position
    * @param value - New weight
    */
-  public setWeight(position: PathfindingPosition, value: number): void {
+  public setWeight(position: PathfindingPoint, value: number): void {
+    if (!this.isPointValid(position)) {
+      throw Error('Invalid position. Non-integer values');
+    }
+
     if (this.getWeight(position) === value) {
       return;
     }
@@ -90,7 +102,11 @@ export class PathfindingLayer {
    *
    * @param position - Tile position
    */
-  public resetWeight(position: PathfindingPosition): void {
+  public resetWeight(position: PathfindingPoint): void {
+    if (!this.isPointValid(position)) {
+      throw Error('Invalid position. Non-integer values');
+    }
+
     if (this.getWeight(position) === PATHFINDING_DEFAULT_TILE_WEIGHT) {
       return;
     }
@@ -109,7 +125,11 @@ export class PathfindingLayer {
    *
    * @param position - Tile position
    */
-  public getWeight(position: PathfindingPosition): number {
+  public getWeight(position: PathfindingPoint): number {
+    if (!this.isPointValid(position)) {
+      throw Error('Invalid position. Non-integer values');
+    }
+
     return this.weights[position.y]?.[position.x] ?? PATHFINDING_DEFAULT_TILE_WEIGHT;
   }
 
@@ -125,6 +145,14 @@ export class PathfindingLayer {
     config: PathfindingTaskConfig,
     callback: PathfindingTaskCallback,
   ): number {
+    if (!this.isPointValid(config.from)) {
+      throw Error('Invalid position \'from\'. Non-integer values');
+    }
+
+    if (!this.isPointValid(config.to)) {
+      throw Error('Invalid position \'to\'. Non-integer values');
+    }
+
     const id = ++this.lastTaskId;
 
     this.pathfinding.events.send(PathfindingEvent.CreateTask, {
@@ -154,5 +182,12 @@ export class PathfindingLayer {
     });
 
     this.handlers.delete(id);
+  }
+
+  private isPointValid(point: PathfindingPoint) {
+    return (
+      point.x === Math.round(point.x) &&
+      point.y === Math.round(point.y)
+    );
   }
 }

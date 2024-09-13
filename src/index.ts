@@ -5,8 +5,15 @@ import { PathfindingEvent } from './events/types';
 import { PathfindingLayer } from './layer';
 import INLINE_WORKER from '../.tmp/worker.inline.js';
 
-import type { PathfindingTaskCallback, PathfindingTaskResult } from './task/types';
-import type { PathfindingGrid, PathfindingConfig, PathfindingPosition } from './types';
+import type {
+  PathfindingTaskCallback,
+  PathfindingTaskResult,
+} from './task/types';
+import type {
+  PathfindingGrid,
+  PathfindingConfig,
+  PathfindingPoint,
+} from './types';
 
 export class Pathfinding {
   public readonly worker: Worker;
@@ -96,7 +103,7 @@ export class Pathfinding {
 
 export type {
   PathfindingGrid,
-  PathfindingPosition,
+  PathfindingPoint,
   PathfindingLayer,
   PathfindingTaskCallback,
   PathfindingTaskResult,

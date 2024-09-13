@@ -3,15 +3,15 @@ import Heap from 'heap';
 import { PathfindingNode } from '../node';
 
 import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
-import type { PathfindingPosition } from '../types';
+import type { PathfindingPoint } from '../types';
 
 /**
  * @internal
  */
 export class PathfindingTask {
-  public readonly from: PathfindingPosition;
+  public readonly from: PathfindingPoint;
 
-  public readonly to: PathfindingPosition;
+  public readonly to: PathfindingPoint;
 
   public readonly id: number;
 
@@ -49,13 +49,13 @@ export class PathfindingTask {
     this.pushNode(node);
   }
 
-  private getDistanceFrom(position: PathfindingPosition): number {
+  private getDistanceFrom(position: PathfindingPoint): number {
     return Math.sqrt(
       (position.x - this.to.x) ** 2 + (position.y - this.to.y) ** 2,
     );
   }
 
-  public addNode(parent: PathfindingNode, position: PathfindingPosition, weight: number): void {
+  public addNode(parent: PathfindingNode, position: PathfindingPoint, weight: number): void {
     const node = new PathfindingNode({
       position,
       distance: this.getDistanceFrom(position),
@@ -75,7 +75,7 @@ export class PathfindingTask {
     this.tree[node.position.y][node.position.x] = node;
   }
 
-  public pickNode(position: PathfindingPosition): PathfindingNode {
+  public pickNode(position: PathfindingPoint): PathfindingNode {
     return this.tree[position.y]?.[position.x];
   }
 
@@ -92,7 +92,7 @@ export class PathfindingTask {
 
   public getNextWeight(
     currentNode: PathfindingNode,
-    shift: PathfindingPosition,
+    shift: PathfindingPoint,
     weights: number[][],
   ): number {
     return currentNode.getWeight() + currentNode.getNextWeight(shift, weights);

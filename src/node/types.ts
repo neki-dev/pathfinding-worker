@@ -1,10 +1,10 @@
-import type { PathfindingPosition } from '../types';
+import type { PathfindingPoint } from '../types';
 
 /**
  * @internal
  */
 export type PathfindingNodeConfig = {
-  position: PathfindingPosition;
+  position: PathfindingPoint;
   distance: number;
   weight?: number;
 };

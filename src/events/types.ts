@@ -1,5 +1,5 @@
 import type { PathfindingTaskResult } from '../task/types';
-import type { PathfindingGrid, PathfindingPosition } from '../types';
+import type { PathfindingGrid, PathfindingPoint } from '../types';
 
 /**
  * @internal
@@ -21,8 +21,9 @@ export type PathfindingEventPayload = {
   [PathfindingEvent.CreateTask]: {
     idLayer: string;
     idTask: number;
-    from: PathfindingPosition;
-    to: PathfindingPosition;
+    from: PathfindingPoint;
+    to: PathfindingPoint;
+    diagonals?: boolean;
   };
   [PathfindingEvent.CancelTask]: {
     idLayer: string;
@@ -30,12 +31,12 @@ export type PathfindingEventPayload = {
   };
   [PathfindingEvent.SetWeight]: {
     idLayer: string;
-    position: PathfindingPosition;
+    position: PathfindingPoint;
     value: number | null;
   };
   [PathfindingEvent.SetWalkable]: {
     idLayer: string;
-    position: PathfindingPosition;
+    position: PathfindingPoint;
     state: boolean;
   };
   [PathfindingEvent.CompleteTask]: {

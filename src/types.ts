@@ -17,12 +17,12 @@ export type PathfindingTaskConfig = {
   /**
    * Begin tile position
    */
-  from: PathfindingPosition;
+  from: PathfindingPoint;
 
   /**
    * End tile position
    */
-  to: PathfindingPosition;
+  to: PathfindingPoint;
 
   /**
    * Allow diagonal directions
@@ -33,7 +33,7 @@ export type PathfindingTaskConfig = {
 /**
  * Grid cell position
  */
-export type PathfindingPosition = {
+export type PathfindingPoint = {
   x: number;
   y: number;
 };

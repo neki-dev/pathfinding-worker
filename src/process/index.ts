@@ -6,7 +6,7 @@ import {
 
 import type { PathfindingNode } from '../node';
 import type { PathfindingTask } from '../task';
-import type { PathfindingGrid, PathfindingPosition } from '../types';
+import type { PathfindingGrid, PathfindingPoint } from '../types';
 
 /**
  * @internal
@@ -59,7 +59,7 @@ export class PathfindingProcess {
 
   public setWeight(
     idLayer: string,
-    position: PathfindingPosition,
+    position: PathfindingPoint,
     value: number | null,
   ): void {
     const weight = this.weights.get(idLayer);
@@ -81,7 +81,7 @@ export class PathfindingProcess {
 
   public setWalkable(
     idLayer: string,
-    position: PathfindingPosition,
+    position: PathfindingPoint,
     state: boolean,
   ) {
     const grid = this.grids.get(idLayer);
@@ -139,8 +139,8 @@ export class PathfindingProcess {
   private getNextDirections(
     task: PathfindingTask,
     node: PathfindingNode,
-  ): PathfindingPosition[] {
-    const directions: PathfindingPosition[] = [];
+  ): PathfindingPoint[] {
+    const directions: PathfindingPoint[] = [];
     const clears: Set<string> = new Set();
 
     Object.entries(PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT).forEach(
@@ -169,7 +169,7 @@ export class PathfindingProcess {
   private isWalkable(
     idLayer: string,
     node: PathfindingNode,
-    direction: PathfindingPosition,
+    direction: PathfindingPoint,
   ) {
     const grid = this.grids.get(idLayer);
     if (!grid) {

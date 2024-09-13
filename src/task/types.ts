@@ -1,4 +1,4 @@
-import type { PathfindingPosition } from '../types';
+import type { PathfindingPoint } from '../types';
 
 /**
  * @internal
@@ -6,8 +6,8 @@ import type { PathfindingPosition } from '../types';
 export type PathfindingTaskConfig = {
   idTask: number;
   idLayer: string;
-  from: PathfindingPosition;
-  to: PathfindingPosition;
+  from: PathfindingPoint;
+  to: PathfindingPoint;
   diagonals?: boolean;
 };
 
@@ -19,7 +19,7 @@ export type PathfindingTaskResult = {
    * Path from starting cell to ending cell
    * Will be null if path is not found
    */
-  path: PathfindingPosition[] | null;
+  path: PathfindingPoint[] | null;
 
   /**
    * Total path weight
