@@ -44,7 +44,9 @@ describe('PathfindingNode', () => {
   it('should return result', () => {
     expect(node.compute()).toEqual({
       weight: 0,
-      path: [{ x: 0, y: 0 }],
+      path: new Uint8Array([
+        0, 0,
+      ]),
     });
   });
 
@@ -58,7 +60,10 @@ describe('PathfindingNode', () => {
 
     expect(node.compute()).toEqual({
       weight: 1,
-      path: [{ x: 1, y: 1 }, { x: 0, y: 0 }],
+      path: new Uint8Array([
+        1, 1,
+        0, 0,
+      ]),
     });
   });
 });

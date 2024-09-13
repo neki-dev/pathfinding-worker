@@ -53,7 +53,9 @@ export class Pathfinding {
 
       callback({
         weight: result.weight,
-        path: result.path && this.unflatPath(result.path),
+        path: result.path && (
+          Pathfinding.unflatPath(result.path)
+        ),
       });
 
       layer.handlers.delete(idTask);
@@ -116,7 +118,7 @@ export class Pathfinding {
     });
   }
 
-  private unflatPath(path: Uint8Array) {
+  private static unflatPath(path: Uint8Array) {
     const result: PathfindingPoint[] = [];
     for (let i = 0; i < path.length - 1; i += 2) {
       result.push({

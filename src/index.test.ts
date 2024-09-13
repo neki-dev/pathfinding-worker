@@ -91,6 +91,7 @@ describe('Pathfinding', () => {
         payload: {
           idLayer: layer.uuid,
           idTask,
+          result: {},
         },
       });
 

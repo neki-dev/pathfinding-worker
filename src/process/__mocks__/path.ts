@@ -1,20 +1,20 @@
-export const mockedPath = [
-  { x: 6, y: 16 },
-  { x: 6, y: 17 },
-  { x: 6, y: 18 },
-  { x: 6, y: 19 },
-  { x: 6, y: 20 },
-  { x: 6, y: 21 },
-  { x: 7, y: 22 },
-];
+export const mockedPath = new Uint8Array([
+  6, 16,
+  6, 17,
+  6, 18,
+  6, 19,
+  6, 20,
+  6, 21,
+  7, 22,
+]);
 
-export const mockedStraightPath = [
-  { x: 6, y: 16 },
-  { x: 6, y: 17 },
-  { x: 6, y: 18 },
-  { x: 6, y: 19 },
-  { x: 6, y: 20 },
-  { x: 6, y: 21 },
-  { x: 7, y: 21 },
-  { x: 7, y: 22 },
-];
+export const mockedStraightPath = new Uint8Array([
+  6, 16,
+  6, 17,
+  6, 18,
+  6, 19,
+  6, 20,
+  6, 21,
+  7, 21,
+  7, 22,
+]);
