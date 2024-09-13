@@ -12,6 +12,14 @@ export type PathfindingTaskConfig = {
 };
 
 /**
+ * @internal
+ */
+export type PathfindingTaskResultRaw = {
+  path: Uint8Array | null;
+  weight: number;
+};
+
+/**
  * Task result
  */
 export type PathfindingTaskResult = {

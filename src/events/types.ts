@@ -1,4 +1,4 @@
-import type { PathfindingTaskResult } from '../task/types';
+import type { PathfindingTaskResultRaw } from '../task/types';
 import type { PathfindingGrid, PathfindingPoint } from '../types';
 
 /**
@@ -42,7 +42,7 @@ export type PathfindingEventPayload = {
   [PathfindingEvent.CompleteTask]: {
     idLayer: string;
     idTask: number;
-    result: PathfindingTaskResult;
+    result: PathfindingTaskResultRaw;
   };
   [PathfindingEvent.AddLayer]: {
     idLayer: string;

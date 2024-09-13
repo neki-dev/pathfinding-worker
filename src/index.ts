@@ -27,10 +27,7 @@ export class Pathfinding {
    *
    * @param config - Pathfinding configuration
    */
-  constructor({
-    loopRate,
-    resourceLimits,
-  }: PathfindingConfig = {}) {
+  constructor({ loopRate, resourceLimits }: PathfindingConfig = {}) {
     this.worker = new Worker(INLINE_WORKER, {
       name: 'pathfinding',
       eval: true,
@@ -54,7 +51,11 @@ export class Pathfinding {
         return;
       }
 
-      callback(result);
+      callback({
+        weight: result.weight,
+        path: result.path && this.unflatPath(result.path),
+      });
+
       layer.handlers.delete(idTask);
     });
   }
@@ -113,6 +114,18 @@ export class Pathfinding {
     this.events.send(PathfindingEvent.RemoveLayer, {
       idLayer: id,
     });
+  }
+
+  private unflatPath(path: Uint8Array) {
+    const result: PathfindingPoint[] = [];
+    for (let i = 0; i < path.length - 1; i += 2) {
+      result.push({
+        x: path[i],
+        y: path[i + 1],
+      });
+    }
+
+    return result;
   }
 }
 

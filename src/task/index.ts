@@ -2,7 +2,7 @@ import Heap from 'heap';
 
 import { PathfindingNode } from '../node';
 
-import type { PathfindingTaskConfig, PathfindingTaskResult } from './types';
+import type { PathfindingTaskConfig, PathfindingTaskResultRaw } from './types';
 import type { PathfindingPoint } from '../types';
 
 /**
@@ -23,11 +23,11 @@ export class PathfindingTask {
 
   private nodes: Heap<PathfindingNode>;
 
-  public readonly complete: (result: PathfindingTaskResult) => void;
+  public readonly complete: (result: PathfindingTaskResultRaw) => void;
 
   constructor(
     { idTask, from, to, idLayer, diagonals = true }: PathfindingTaskConfig,
-    onComplete: (result: PathfindingTaskResult) => void,
+    onComplete: (result: PathfindingTaskResultRaw) => void,
   ) {
     this.id = idTask;
     this.from = { ...from };

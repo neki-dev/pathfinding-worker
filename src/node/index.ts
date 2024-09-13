@@ -1,7 +1,7 @@
 import { PATHFINDING_DEFAULT_TILE_WEIGHT } from '../layer/const';
 
 import type { PathfindingNodeConfig } from './types';
-import type { PathfindingTaskResult } from '../task/types';
+import type { PathfindingTaskResultRaw } from '../task/types';
 import type { PathfindingPoint } from '../types';
 
 /**
@@ -46,20 +46,23 @@ export class PathfindingNode {
     this.parent = parent;
   }
 
-  public compute(): PathfindingTaskResult {
-    const path: PathfindingPoint[] = [{ ...this.position }];
+  public compute(): PathfindingTaskResultRaw {
     const weight = this.parent ? this.parent.getWeight() : 0;
+    const path: number[] = [
+      this.position.x,
+      this.position.y,
+    ];
 
     let parent = this.getParent();
-
     while (parent) {
-      path.push({ ...parent.position });
+      path.unshift(parent.position.x, parent.position.y);
       parent = parent.getParent();
     }
 
-    path.reverse();
-
-    return { path, weight };
+    return {
+      path: new Uint8Array(path),
+      weight,
+    };
   }
 
   public getNextWeight(shift: PathfindingPoint, weights: number[][]): number {
