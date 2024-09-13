@@ -84,13 +84,22 @@ export class Pathfinding {
   }
 
   /**
+   * Check for layer presence.
+   *
+   * @param id - Layer id
+   */
+  public hasLayer(id: string): boolean {
+    return this.layers.has(id);
+  }
+
+  /**
    * Remove layer of grid.
    *
    * @param id - Layer id
    */
   public removeLayer(id: string): void {
-    if (!this.layers.has(id)) {
-      return;
+    if (!this.hasLayer(id)) {
+      throw Error(`Layer with id '${id}' is not found`);
     }
 
     this.layers.delete(id);
