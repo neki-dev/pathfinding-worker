@@ -24,11 +24,15 @@ export declare class Pathfinding {
      */
     createLayer(grid: PathfindingGrid): PathfindingLayer;
     /**
-     * Check for layer presence.
+     * Get list of created layers.
+     */
+    getLayers(): PathfindingLayer[];
+    /**
+     * Get layer by id.
      *
      * @param id - Layer id
      */
-    hasLayer(id: string): boolean;
+    getLayer(id: string): PathfindingLayer | null;
     /**
      * Remove layer of grid.
      *

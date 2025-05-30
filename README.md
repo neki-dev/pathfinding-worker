@@ -60,6 +60,19 @@ const layer = pathfinding.createLayer(
 ```
 * `grid` - _Grid with walkable tiles_
 
+### ⚡️ Get list of created layers
+```ts
+pathfinding.getLayers()
+```
+
+### ⚡️ Get layer by id
+```ts
+pathfinding.getLayer(
+  id: string
+)
+```
+* `id` - _Layer id_
+
 ### ⚡️ Remove exist layer of grid
 ```ts
 layer.remove()

@@ -86,12 +86,19 @@ export class Pathfinding {
   }
 
   /**
-   * Check for layer presence.
+   * Get list of created layers.
+   */
+  public getLayers(): PathfindingLayer[] {
+    return Array.from(this.layers.values());
+  }
+
+  /**
+   * Get layer by id.
    *
    * @param id - Layer id
    */
-  public hasLayer(id: string): boolean {
-    return this.layers.has(id);
+  public getLayer(id: string): PathfindingLayer | null {
+    return this.layers.get(id) ?? null;
   }
 
   /**
@@ -100,7 +107,7 @@ export class Pathfinding {
    * @param id - Layer id
    */
   public removeLayer(id: string): void {
-    if (!this.hasLayer(id)) {
+    if (!this.getLayer(id)) {
       throw Error(`Layer with id '${id}' is not found`);
     }
 
