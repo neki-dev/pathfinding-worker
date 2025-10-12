@@ -10,7 +10,7 @@ if (!parentPort) {
 }
 
 const events = new PathfindingEvents(parentPort);
-const process = new PathfindingProcess(workerData.loopRate);
+const process = new PathfindingProcess(workerData);
 
 events.on(PathfindingEvent.CreateTask, (payload) => {
   const task = new PathfindingTask(payload, (result) => {

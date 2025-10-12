@@ -12,7 +12,7 @@ export declare class Pathfinding {
      *
      * @param config - Pathfinding configuration
      */
-    constructor({ loopRate, resourceLimits }?: PathfindingConfig);
+    constructor({ loopRate, taskProcessRate, resourceLimits }?: PathfindingConfig);
     /**
      * Terminate worker thread.
      */
