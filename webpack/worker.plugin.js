@@ -11,9 +11,14 @@ class InjectWorkerPlugin {
       'InjectWorkerPlugin',
       ({ hooks, assets }) => {
         hooks.afterOptimizeChunkAssets.tap('InjectWorkerPlugin', () => {
+          const source = assets[WEBPACK_INLINE_WORKER_TEMP_FILE_NAME].source();
+          const escapedSource = source
+            .replace(/\\/g, '\\\\')
+            .replace(/`/g, '\\`')
+            .replace(/\$\{/g, '\\${');
           assets[WEBPACK_INLINE_WORKER_TEMP_FILE_NAME] = new ConcatSource(
             'module.exports = `',
-            assets[WEBPACK_INLINE_WORKER_TEMP_FILE_NAME],
+            escapedSource,
             '`;',
           );
         });

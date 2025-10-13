@@ -23,6 +23,8 @@ export class PathfindingTask {
 
   private nodes: Heap<PathfindingNode>;
 
+  private visited: Set<string> = new Set();
+
   public readonly complete: (result: PathfindingTaskResultRaw) => void;
 
   constructor(
@@ -83,7 +85,7 @@ export class PathfindingTask {
     return this.nodes.pop() ?? null;
   }
 
-  public useNode(current: PathfindingNode, next: PathfindingNode, weight: number): void {
+  public rewriteNode(current: PathfindingNode, next: PathfindingNode, weight: number): void {
     next.setWeight(weight);
     next.setParent(current);
 
@@ -96,5 +98,17 @@ export class PathfindingTask {
     weights: number[][],
   ): number {
     return currentNode.getWeight() + currentNode.getNextWeight(shift, weights);
+  }
+
+  private getPositionKey(position: PathfindingPoint): string {
+    return `${position.x},${position.y}`;
+  }
+
+  public isVisited(position: PathfindingPoint): boolean {
+    return this.visited.has(this.getPositionKey(position));
+  }
+
+  public markVisited(position: PathfindingPoint): void {
+    this.visited.add(this.getPositionKey(position));
   }
 }

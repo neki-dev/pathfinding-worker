@@ -111,6 +111,12 @@ export class PathfindingProcess {
       return;
     }
 
+    const next = () => {
+      setTimeout(() => {
+        this.handleTask();
+      }, this.taskProcessRate);
+    };
+
     const complete = (result: PathfindingTaskResultRaw) => {
       this.queue.shift();
       task.complete(result);
@@ -119,6 +125,13 @@ export class PathfindingProcess {
     try {
       const currentNode = task.takeLastNode();
       if (currentNode) {
+        if (task.isVisited(currentNode.position)) {
+          next();
+          return;
+        }
+
+        task.markVisited(currentNode.position);
+
         if (
           currentNode.position.x === task.to.x &&
           currentNode.position.y === task.to.y
@@ -130,13 +143,18 @@ export class PathfindingProcess {
               x: currentNode.position.x + offset.x,
               y: currentNode.position.y + offset.y,
             };
+
+            if (task.isVisited(position)) {
+              return;
+            }
+
             const weights = this.weights.get(task.idLayer) ?? [];
             const nextWeight = task.getNextWeight(currentNode, offset, weights);
             const nextNode = task.pickNode(position);
 
             if (nextNode) {
               if (nextWeight < nextNode.getWeight()) {
-                task.useNode(currentNode, nextNode, nextWeight);
+                task.rewriteNode(currentNode, nextNode, nextWeight);
               }
             } else {
               task.addNode(currentNode, position, nextWeight);
@@ -150,9 +168,7 @@ export class PathfindingProcess {
         });
       }
 
-      setTimeout(() => {
-        this.handleTask();
-      }, this.taskProcessRate);
+      next();
     } catch (error) {
       console.error('Pathfinding process error:', error);
       complete({
