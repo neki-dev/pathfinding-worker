@@ -1,5 +1,5 @@
 import {
-  PATHFINDING_PROCESS_LOOP_RATE,
+  PATHFINDING_PROCESS_TASK_FINDING_RATE,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT,
   PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE,
@@ -21,27 +21,27 @@ export class PathfindingProcess {
 
   private queue: PathfindingTask[] = [];
 
-  private readonly timer: NodeJS.Timeout;
+  private timer: NodeJS.Timeout | null = null;
 
-  private processing: boolean = false;
+  private readonly maxStackSize: number;
 
-  constructor({
-    loopRate = PATHFINDING_PROCESS_LOOP_RATE,
-  }: PathfindingProcessConfig) {
-    this.timer = setInterval(() => {
-      try {
-        if (!this.processing) {
-          this.processing = true;
-          this.handleTask();
-        }
-      } catch (error) {
-        console.error('Pathfinding process error:', error);
-      }
-    }, loopRate);
+  private readonly taskFindingRate: number;
+
+  constructor({ taskFindingRate, maxStackSize, loopRate }: PathfindingProcessConfig) {
+    this.taskFindingRate = (taskFindingRate ?? loopRate) ?? PATHFINDING_PROCESS_TASK_FINDING_RATE;
+    this.maxStackSize = maxStackSize ?? PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE;
+
+    try {
+      this.handleTask();
+    } catch (error) {
+      console.error('Pathfinding process initialize error:', error);
+    }
   }
 
   public destroy(): void {
-    clearTimeout(this.timer);
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
   }
 
   public createTask(task: PathfindingTask): void {
@@ -105,12 +105,15 @@ export class PathfindingProcess {
   private handleTask(stackSize: number = 0): void {
     const task = this.queue[0];
     if (!task) {
-      this.processing = false;
+      this.timer = setTimeout(() => {
+        this.timer = null;
+        this.handleTask();
+      }, this.taskFindingRate);
       return;
     }
 
     const next = () => {
-      if (stackSize >= PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE) {
+      if (stackSize >= this.maxStackSize) {
         setTimeout(() => {
           this.handleTask();
         });
@@ -122,7 +125,7 @@ export class PathfindingProcess {
     const complete = (result: PathfindingTaskResultRaw) => {
       this.queue.shift();
       task.complete(result);
-      this.processing = false;
+      next();
     };
 
     try {

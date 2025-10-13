@@ -41,10 +41,11 @@ const pathfinding = new Pathfinding(
 
 - `config` - _Pathfinding configuration_
 
-| Prop           | Description            | Default |
-| -------------- | ---------------------- | ------- |
-| loopRate       | Finding next task rate | 200 ms  |
-| resourceLimits | Worker resource limits | -       |
+| Prop           | Description                                                                      | Default |
+| -------------- | -------------------------------------------------------------------------------- | ------- |
+| loopRate       | Pause before executing the next task after all previous ones have been completed | 100 ms  |
+| maxStackSize   | Max recursive depth to handle task in one tick                                   | 128     |
+| resourceLimits | Worker resource limits                                                           | -       |
 
 ### ⚡️ Terminate worker thread
 

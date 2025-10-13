@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-export const PATHFINDING_PROCESS_LOOP_RATE = 100;
+export const PATHFINDING_PROCESS_TASK_FINDING_RATE = 100;
 
 /**
  * @internal
