@@ -25,7 +25,7 @@ export type PathfindingTaskConfig = {
  */
 export type PathfindingTaskResult = {
   /**
-   * Path from starting cell to ending cell
+   * Path to target cell
    * Will be null if path is not found
    */
   path: PathfindingPoint[] | null;

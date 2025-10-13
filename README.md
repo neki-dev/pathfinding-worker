@@ -41,11 +41,11 @@ const pathfinding = new Pathfinding(
 
 - `config` - _Pathfinding configuration_
 
-| Prop           | Description                                                                      | Default |
-| -------------- | -------------------------------------------------------------------------------- | ------- |
-| loopRate       | Pause before executing the next task after all previous ones have been completed | 100 ms  |
-| maxStackSize   | Max recursive depth to handle task in one tick                                   | 128     |
-| resourceLimits | Worker resource limits                                                           | -       |
+| Prop            | Description                                           | Default |
+| --------------- | ----------------------------------------------------- | ------- |
+| taskFindingRate | Delay to handle next task after all previous are done | 100 ms  |
+| maxStackSize    | Max recursive depth to handle task in one tick        | 128     |
+| resourceLimits  | Worker resource limits                                | -       |
 
 ### ⚡️ Terminate worker thread
 
@@ -111,6 +111,11 @@ const idTask = layer.findPath(
 | diagonals | Allow diagonal directions | true    |
 
 - `callback` - _Callback with result_
+
+| Prop   | Description         | Type            |
+| ------ | ------------------- | --------------- |
+| path   | Path to target cell | Array<{ x, y }> |
+| weight | Total path weight   | number          |
 
 ### ⚡️ Cancel pathfinder task
 
