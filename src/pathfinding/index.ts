@@ -20,11 +20,11 @@ export class Pathfinding {
    *
    * @param config - Pathfinding configuration
    */
-  constructor({ loopRate, taskProcessRate, resourceLimits }: PathfindingConfig = {}) {
+  constructor({ loopRate, resourceLimits }: PathfindingConfig = {}) {
     this.worker = new Worker(INLINE_WORKER, {
       name: 'pathfinding',
       eval: true,
-      workerData: { loopRate, taskProcessRate },
+      workerData: { loopRate },
       resourceLimits,
     });
 

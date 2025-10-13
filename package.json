@@ -1,7 +1,7 @@
 {
   "name": "pathfinding-worker",
   "description": "Fast node.js pathfinding on workers for grid-based games",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "keywords": [
     "astar",
     "dijkstra",
@@ -26,7 +26,7 @@
     "build": "yarn build:worker && yarn build:entrypoint",
     "build:worker": "webpack --config ./webpack/worker.config.js --mode production",
     "build:entrypoint": "webpack --config ./webpack/entrypoint.config.js --mode production",
-    "test": "jest",
+    "test": "yarn build && jest",
     "lint": "eslint \"./src/**/*.ts\" --fix"
   },
   "dependencies": {

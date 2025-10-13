@@ -6,7 +6,7 @@ export const PATHFINDING_PROCESS_LOOP_RATE = 100;
 /**
  * @internal
  */
-export const PATHFINDING_PROCESS_TASK_PROCESS_RATE = 0;
+export const PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE = 128;
 
 /**
  * @internal

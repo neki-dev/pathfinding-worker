@@ -41,11 +41,10 @@ const pathfinding = new Pathfinding(
 
 - `config` - _Pathfinding configuration_
 
-| Prop            | Description            | Default |
-| --------------- | ---------------------- | ------- |
-| loopRate        | Finding next task rate | 100 ms  |
-| taskProcessRate | Processing task rate   | 0 ms    |
-| resourceLimits  | Worker resource limits | -       |
+| Prop           | Description            | Default |
+| -------------- | ---------------------- | ------- |
+| loopRate       | Finding next task rate | 200 ms  |
+| resourceLimits | Worker resource limits | -       |
 
 ### ⚡️ Terminate worker thread
 

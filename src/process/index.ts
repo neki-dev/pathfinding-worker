@@ -2,7 +2,7 @@ import {
   PATHFINDING_PROCESS_LOOP_RATE,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_DIAGONAL,
   PATHFINDING_PROCESS_NEXT_DIRECTIINS_STRAIGHT,
-  PATHFINDING_PROCESS_TASK_PROCESS_RATE,
+  PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE,
 } from './const';
 
 import type { PathfindingProcessConfig } from './types';
@@ -21,26 +21,27 @@ export class PathfindingProcess {
 
   private queue: PathfindingTask[] = [];
 
-  private timer: NodeJS.Timeout | null = null;
+  private readonly timer: NodeJS.Timeout;
 
-  private readonly taskProcessRate: number;
-
-  private readonly loopRate: number;
+  private processing: boolean = false;
 
   constructor({
-    taskProcessRate = PATHFINDING_PROCESS_TASK_PROCESS_RATE,
     loopRate = PATHFINDING_PROCESS_LOOP_RATE,
   }: PathfindingProcessConfig) {
-    this.taskProcessRate = taskProcessRate;
-    this.loopRate = loopRate;
-
-    this.handleTask();
+    this.timer = setInterval(() => {
+      try {
+        if (!this.processing) {
+          this.processing = true;
+          this.handleTask();
+        }
+      } catch (error) {
+        console.error('Pathfinding process error:', error);
+      }
+    }, loopRate);
   }
 
   public destroy(): void {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
+    clearTimeout(this.timer);
   }
 
   public createTask(task: PathfindingTask): void {
@@ -101,76 +102,77 @@ export class PathfindingProcess {
     grid[position.y][position.x] = state;
   }
 
-  private handleTask(): void {
+  private handleTask(stackSize: number = 0): void {
     const task = this.queue[0];
     if (!task) {
-      this.timer = setTimeout(() => {
-        this.timer = null;
-        this.handleTask();
-      }, this.loopRate);
+      this.processing = false;
       return;
     }
 
     const next = () => {
-      setTimeout(() => {
-        this.handleTask();
-      }, this.taskProcessRate);
+      if (stackSize >= PATHFINDING_PROCESS_TASK_HANDLING_MAX_STACK_SIZE) {
+        setTimeout(() => {
+          this.handleTask();
+        });
+      } else {
+        this.handleTask(stackSize + 1);
+      }
     };
 
     const complete = (result: PathfindingTaskResultRaw) => {
       this.queue.shift();
       task.complete(result);
+      this.processing = false;
     };
 
     try {
       const currentNode = task.takeLastNode();
-      if (currentNode) {
-        if (task.isVisited(currentNode.position)) {
-          next();
-          return;
-        }
-
-        task.markVisited(currentNode.position);
-
-        if (
-          currentNode.position.x === task.to.x &&
-          currentNode.position.y === task.to.y
-        ) {
-          complete(currentNode.compute());
-        } else {
-          this.getNextDirections(task, currentNode).forEach((offset) => {
-            const position = {
-              x: currentNode.position.x + offset.x,
-              y: currentNode.position.y + offset.y,
-            };
-
-            if (task.isVisited(position)) {
-              return;
-            }
-
-            const weights = this.weights.get(task.idLayer) ?? [];
-            const nextWeight = task.getNextWeight(currentNode, offset, weights);
-            const nextNode = task.pickNode(position);
-
-            if (nextNode) {
-              if (nextWeight < nextNode.getWeight()) {
-                task.rewriteNode(currentNode, nextNode, nextWeight);
-              }
-            } else {
-              task.addNode(currentNode, position, nextWeight);
-            }
-          });
-        }
-      } else {
-        complete({
+      if (!currentNode) {
+        return complete({
           path: null,
           weight: Infinity,
         });
       }
 
+      if (task.isVisited(currentNode.position)) {
+        return next();
+      }
+
+      task.markVisited(currentNode.position);
+
+      if (
+        currentNode.position.x === task.to.x &&
+        currentNode.position.y === task.to.y
+      ) {
+        return complete(currentNode.compute());
+      }
+
+      this.getNextDirections(task, currentNode).forEach((offset) => {
+        const position = {
+          x: currentNode.position.x + offset.x,
+          y: currentNode.position.y + offset.y,
+        };
+
+        if (task.isVisited(position)) {
+          return;
+        }
+
+        const weights = this.weights.get(task.idLayer) ?? [];
+        const nextWeight = task.getNextWeight(currentNode, offset, weights);
+        const nextNode = task.pickNode(position);
+
+        if (nextNode) {
+          if (nextWeight < nextNode.getWeight()) {
+            task.rewriteNode(currentNode, nextNode, nextWeight);
+          }
+        } else {
+          task.addNode(currentNode, position, nextWeight);
+        }
+      });
+
       next();
     } catch (error) {
-      console.error('Pathfinding process error:', error);
+      console.error('Pathfinding handle task error:', error);
       complete({
         path: null,
         weight: Infinity,
