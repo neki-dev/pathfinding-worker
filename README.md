@@ -41,11 +41,11 @@ const pathfinding = new Pathfinding(
 
 - `config` - _Pathfinding configuration_
 
-| Prop            | Description                                           | Default |
-| --------------- | ----------------------------------------------------- | ------- |
-| taskFindingRate | Delay to handle next task after all previous are done | 100 ms  |
-| maxStackSize    | Max recursive depth to handle task in one tick        | 128     |
-| resourceLimits  | Worker resource limits                                | -       |
+| Prop            | Description                                                                               | Default |
+| --------------- | ----------------------------------------------------------------------------------------- | ------- |
+| taskFindingRate | Delay to handle next task after all previous are done                                     | 100 ms  |
+| maxStackSize    | Max recursive depth to handle task in one tick                                            | 128     |
+| resourceLimits  | [Worker resource limits](https://nodejs.org/api/worker_threads.html#workerresourcelimits) | -       |
 
 ### ⚡️ Terminate worker thread
 
